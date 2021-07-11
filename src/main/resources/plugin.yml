@@ -1,0 +1,10 @@
+name: LuckyBounties
+version: 1.0
+main: de.lucky44.luckybounties.LuckyBounties
+api-version: 1.14
+
+commands:
+  bounties:
+    aliases: b
+    description: show bounties menu
+    usage: /bounties
