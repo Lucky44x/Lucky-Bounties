@@ -23,6 +23,8 @@ public class item {
 
     public String[] extras;
 
+    public ItemStack converted = null;
+
     public item(ItemStack iS){
 
         //Convert ItemStack to custom ItemData which is better suited to be saved and loaded by gson
@@ -95,9 +97,12 @@ public class item {
         }
 
         number = iS.getAmount();
+
+        //Convert the itemstack only once on creation
+        converted = toItem();
     }
 
-    public ItemStack toItem(){
+    private ItemStack toItem(){
 
         //Convert custom ItemData to ItemStack
 

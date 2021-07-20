@@ -17,7 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class eventManager implements Listener {
@@ -94,7 +93,7 @@ public class eventManager implements Listener {
                 bounty r = null;
 
                 for(bounty b : LuckyBounties.bounties){
-                    if(b.payment.toItem() == clickedItem){
+                    if(b.payment.converted == clickedItem){
                         r = b;
                     }
                 }
@@ -150,7 +149,7 @@ public class eventManager implements Listener {
 
             //Drop the bounties of killed player
             for(bounty b : bounties){
-                Bukkit.getWorld("world").dropItem(killed.getLocation(),b.payment.toItem());
+                Bukkit.getWorld("world").dropItem(killed.getLocation(),b.payment.converted);
             }
 
             //Clear the bounties of killed player

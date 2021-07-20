@@ -69,7 +69,7 @@ public class guiManager {
         }
 
         for(int i = 0; i < bounties.size(); i++){
-            gui.setItem(i+(i+1) + 18,bounties.get(i).payment.toItem());
+            gui.setItem(i+(i+1) + 18,bounties.get(i).payment.converted);
         }
 
         sender.openInventory(gui);
