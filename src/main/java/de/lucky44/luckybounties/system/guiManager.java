@@ -2,6 +2,7 @@ package de.lucky44.luckybounties.system;
 
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.util.bounty;
+import de.lucky44.luckybounties.util.permissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -36,6 +37,8 @@ public class guiManager {
 
         Inventory gui = Bukkit.createInventory(p, size * 9,ChatColor.BOLD + "BOUNTIES");
 
+        fillInventory(gui,LuckyBounties.gray);
+
         for(int i = 0; i < tabs.size(); i++){
             gui.setItem(i+(i+1),tabs.get(i));
         }
@@ -58,13 +61,17 @@ public class guiManager {
 
         Inventory gui = Bukkit.createInventory(sender, 54, ChatColor.BOLD + toShow.getDisplayName() + "'s bounties");
 
+        fillInventory(gui,LuckyBounties.gray);
+
         gui.setItem(4,getPlayerHead(toShow));
 
-        if(sender.getUniqueId() != toShow.getUniqueId()){
-            gui.setItem(13,LuckyBounties.set);
-        }
+        gui.setItem(13,LuckyBounties.set);
 
-        if(sender.isOp()){
+/*        if(sender.getUniqueId() != toShow.getUniqueId()){
+            gui.setItem(13,LuckyBounties.set);
+        }*/
+
+        if((sender.isOp() && LuckyBounties.instance.Clear == permissionType.OP) || (sender.hasPermission("lb.op") && LuckyBounties.instance.Clear == permissionType.LB) || ((sender.hasPermission("lb.op") || sender.isOp()) && LuckyBounties.instance.Clear == permissionType.BOTH)){
             gui.setItem(8,LuckyBounties.clear);
         }
 
@@ -131,5 +138,11 @@ public class guiManager {
         head.setItemMeta(sKM);
 
         return head;
+    }
+
+    public static void fillInventory(Inventory I,ItemStack _i){
+        for(int i = 0; i < I.getSize(); i++){
+            I.setItem(i,_i);
+        }
     }
 }

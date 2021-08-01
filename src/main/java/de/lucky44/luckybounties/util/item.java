@@ -23,7 +23,7 @@ public class item {
 
     public String[] extras;
 
-    public ItemStack converted = null;
+    public transient ItemStack converted = null;
 
     public item(ItemStack iS){
 
@@ -99,6 +99,12 @@ public class item {
         number = iS.getAmount();
 
         //Convert the itemstack only once on creation
+        if(converted == null){
+            converted = toItem();
+        }
+    }
+
+    public void convert(){
         converted = toItem();
     }
 

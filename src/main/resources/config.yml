@@ -1,0 +1,10 @@
+#__Chat__#
+KillMessageSing: "{Killer} has taken {Killed}'s bounty" #Sing -> One single bounty <<COLORS DON'T WORK YET>>
+KillMessageMult: "{Killer} has taken {Killed}'s bounties" #Mult -> Multiple bounties <<COLORS DON'T WORK YET>>
+
+#__Permissions__#
+#Set to OP (all operators can remove individual bounties) or to LB (only Players with lb.op permission can remove bounties) or BOTH (OP and LB). defaults to OP
+bountyRemove: "OP"
+
+#Set to OP (all operators can clear bounties) or to LB (only Players with lb.op permission can clear bounties) or BOTH (OP and LB). defaults to OP
+bountyClear: "OP"

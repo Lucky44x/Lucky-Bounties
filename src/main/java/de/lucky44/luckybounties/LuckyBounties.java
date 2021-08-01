@@ -4,8 +4,10 @@ import de.lucky44.luckybounties.system.commandManager;
 import de.lucky44.luckybounties.system.eventManager;
 import de.lucky44.luckybounties.util.bounty;
 import de.lucky44.luckybounties.util.fileManager;
+import de.lucky44.luckybounties.util.permissionType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,6 +19,17 @@ import java.util.List;
 import java.util.Objects;
 
 public class LuckyBounties extends JavaPlugin {
+
+    //Other
+    public static LuckyBounties instance;
+
+    public FileConfiguration config;
+
+    public permissionType Clear = permissionType.OP;
+    public permissionType remove = permissionType.OP;
+
+    public String messageSing = "";
+    public String messageMulti = "";
 
     //Bounties
     public static ArrayList<bounty> bounties = new ArrayList<>();
@@ -31,6 +44,20 @@ public class LuckyBounties extends JavaPlugin {
     @Override
     public void onEnable(){
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
+
+        if(instance == null)
+            instance = this;
+
+        this.saveDefaultConfig();
+        config = this.getConfig();
+
+        messageSing = config.getString("KillMessageSing");
+        messageMulti = config.getString("KillMessageMult");
+
+        String s = config.getString("bountyRemove");
+        remove = convertToPermission(s);
+        s = config.getString("bountyClear");
+        Clear = convertToPermission(s);
 
         try {
             fileManager.LoadBounties();
@@ -111,5 +138,23 @@ public class LuckyBounties extends JavaPlugin {
         }
 
         return bs;
+    }
+
+    permissionType convertToPermission(String s){
+
+        permissionType ret = permissionType.OP;
+
+        switch(s.toUpperCase()){
+            case("BOTH"):
+                ret = permissionType.BOTH;
+                break;
+            case("LB"):
+                ret = permissionType.LB;
+                break;
+            default:
+                ret = permissionType.OP;
+        }
+
+        return ret;
     }
 }

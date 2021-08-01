@@ -2,6 +2,7 @@ package de.lucky44.luckybounties.system;
 
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.util.bounty;
+import de.lucky44.luckybounties.util.permissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -11,7 +12,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.DragType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -26,10 +29,15 @@ public class eventManager implements Listener {
 
         Inventory I = e.getClickedInventory();
         Player p = (Player) e.getWhoClicked();
-        ItemStack clickedItem = e.getCurrentItem();
         int clickedSlot = e.getSlot();
 
-        if(clickedItem == null || I == null || (I.getType() != InventoryType.CHEST && I.getType() != InventoryType.DISPENSER)){
+        if(I == null){
+            return;
+        }
+
+        ItemStack clickedItem = I.getItem(clickedSlot);
+
+        if(clickedItem == null || (I.getType() != InventoryType.CHEST && I.getType() != InventoryType.DISPENSER)){
             return;
         }
 
@@ -57,6 +65,7 @@ public class eventManager implements Listener {
             }
 
             e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
         }
         else if(invName.split("'")[1].equals("s bounties")){
 
@@ -87,7 +96,8 @@ public class eventManager implements Listener {
 
             boolean allow = false;
 
-            if(clickedSlot > 17 && p.isOp()){
+            //TODO: Make individual bounties removable again
+/*            if(clickedSlot > 17 && clickedSlot < 54  && isAllowedToClick(p)){
                 allow = true;
 
                 bounty r = null;
@@ -101,15 +111,14 @@ public class eventManager implements Listener {
                 if(r != null){
                     LuckyBounties.bounties.remove(r);
                 }
-            }
+            }*/
 
-            if(!allow){
-                e.setResult(Event.Result.DENY);
-            }
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
         }
         else if(invName.split("'")[1].equals("s head")){
 
-            if(clickedSlot != 4){
+            if(clickedSlot != 4 && clickedSlot <= 8){
 
                 SkullMeta sKM = (SkullMeta) I.getItem(1).getItemMeta();
 
@@ -125,8 +134,13 @@ public class eventManager implements Listener {
                 }
 
                 e.setResult(Event.Result.DENY);
+                e.setCancelled(true);
             }
         }
+    }
+
+    static boolean isAllowedToClick(Player sender){
+        return (sender.isOp() && LuckyBounties.instance.remove == permissionType.OP) || (sender.hasPermission("lb.op") && LuckyBounties.instance.remove == permissionType.LB) || ((sender.hasPermission("lb.op") || sender.isOp()) && LuckyBounties.instance.remove == permissionType.BOTH);
     }
 
     @EventHandler
@@ -140,11 +154,13 @@ public class eventManager implements Listener {
 
             List<bounty> bounties = LuckyBounties.getBounties(killed.getUniqueId().toString());
 
-            if(bounties.size() == 1){
-                e.setDeathMessage(killerP.getDisplayName() + " has taken " + killed.getDisplayName() + "'s bounty");
+            if(bounties.size() == 1 && !LuckyBounties.instance.messageSing.equals("")){
+                String m = LuckyBounties.instance.messageSing.replace("{Killer}",killerP.getDisplayName()).replace("{Killed}",killed.getDisplayName());
+                e.setDeathMessage(m);
             }
-            else if(bounties.size() > 1){
-                e.setDeathMessage(killerP.getDisplayName() + " has taken " + killed.getDisplayName() + "'s bounties");
+            else if(bounties.size() > 1 && !LuckyBounties.instance.messageMulti.equals("")){
+                String m = LuckyBounties.instance.messageMulti.replace("{Killer}",killerP.getDisplayName()).replace("{Killed}",killed.getDisplayName());
+                e.setDeathMessage(m);
             }
 
             //Drop the bounties of killed player

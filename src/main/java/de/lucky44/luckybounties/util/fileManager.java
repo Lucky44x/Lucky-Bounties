@@ -35,6 +35,10 @@ public class fileManager {
 
         bounty[] bs = gson.fromJson(s, bounty[].class);
 
+        for(bounty b : bs){
+            b.payment.convert();
+        }
+
         LuckyBounties.bounties.addAll(Arrays.asList(bs));
     }
 
