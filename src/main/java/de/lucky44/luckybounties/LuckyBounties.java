@@ -90,7 +90,7 @@ public class LuckyBounties extends JavaPlugin {
         Clear = convertToPermission(s);
 
         //WOHOOO MORE LOADING SHIT
-        moneyz = new ItemStack(Material.getMaterial(config.getString("economy-item")));
+        moneyz = new ItemStack(Material.getMaterial(config.getString("economy-item").toUpperCase()));
         useItems = config.getBoolean("use-items");
         economy = config.getBoolean("use-economy");
         rand_bounty = economy && config.getBoolean("use-random");
