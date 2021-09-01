@@ -2,6 +2,7 @@ package de.lucky44.luckybounties.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import de.lucky44.luckybounties.LuckyBounties;
 
 import java.io.*;
@@ -29,31 +30,16 @@ public class fileManager {
         if(!(new File("plugins/LuckyBounties/data.json").exists()))
             return;
 
-        String s = readStream(new FileInputStream("plugins/LuckyBounties/data.json"));
+        JsonReader jR = new JsonReader(new FileReader("plugins/LuckyBounties/data.json"));
 
         Gson gson = new Gson();
 
-        bounty[] bs = gson.fromJson(s, bounty[].class);
+        bounty[] bs = gson.fromJson(jR, bounty[].class);
 
         for(bounty b : bs){
             b.payment.convert();
         }
 
         LuckyBounties.bounties.addAll(Arrays.asList(bs));
-    }
-
-    public static String readStream(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder(512);
-        try {
-            Reader r = new InputStreamReader(is, StandardCharsets.UTF_8);
-            int c;
-            while ((c = r.read()) != -1) {
-                sb.append((char) c);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        is.close();
-        return sb.toString();
     }
 }

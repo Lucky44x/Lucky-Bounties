@@ -10,8 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import java.util.ArrayList;
+import java.util.List;
 
 public class guiManager {
 
@@ -76,7 +78,21 @@ public class guiManager {
         }
 
         for(int i = 0; i < bounties.size(); i++){
-            gui.setItem(i+(i+1) + 18,bounties.get(i).payment.converted);
+            if(bounties.get(i).type == 1){
+
+                if(LuckyBounties.instance.economy) {
+                    ItemStack heGotThemMoneyz = new ItemStack(LuckyBounties.moneyz);
+                    ItemMeta iM =heGotThemMoneyz.getItemMeta();
+                    iM.setDisplayName(ChatColor.BOLD + ChatColor.GOLD.toString() + "Money on kill");
+                    ArrayList<String> lore = new ArrayList<>();
+                    lore.add(ChatColor.GOLD + "" + bounties.get(i).moneyPayment + LuckyBounties.instance.economy_name);
+                    iM.setLore(lore);
+                }
+
+            }
+            else if(LuckyBounties.instance.useItems){
+                gui.setItem(i+(i+1) + 18,bounties.get(i).payment.converted);
+            }
         }
 
         sender.openInventory(gui);

@@ -1,6 +1,6 @@
 #__Chat__#
-KillMessageSing: "{Killer} has taken {Killed}'s bounty" #Sing -> One single bounty <<COLORS DON'T WORK YET>>
-KillMessageMult: "{Killer} has taken {Killed}'s bounties" #Mult -> Multiple bounties <<COLORS DON'T WORK YET>>
+KillMessageSing: "{Killer} has taken {Killed}'s bounty"     #Sing -> One single bounty <<COLORS DON'T WORK YET>>
+KillMessageMult: "{Killer} has taken {Killed}'s bounties"   #Mult -> Multiple bounties <<COLORS DON'T WORK YET>>
 
 #__Permissions__#
 #Set to OP (all operators can remove individual bounties) or to LB (only Players with lb.op permission can remove bounties) or BOTH (OP and LB). defaults to OP
@@ -8,3 +8,21 @@ bountyRemove: "OP"
 
 #Set to OP (all operators can clear bounties) or to LB (only Players with lb.op permission can clear bounties) or BOTH (OP and LB). defaults to OP
 bountyClear: "OP"
+
+#Items
+use-items: true #Toggle the option to set an Item as a bounty
+
+#Economy (Thanks to TEC4TUDO for coming up with the command idea)
+use-economy: false                                          # Makes players able to type eco:{amount} after the bounty set command to set a eco amount
+economy-default-amount: 100                                 # When Items are disabled, this amount of money will be added to the bounty when the setBounty button is clicked (since I'm too lazy to implement a anvil GUI)
+economy-item: gold_nugget                                   # The item which gets chosen to represent the money in the bounties menu
+economy-name: "$"                                           # The name of the economy's currency
+eco-command-on-set: "/eco take {player} {amount}"           # Specifies the command which is executed when a player (or the console) types /bounties set {player} eco:{amount}
+eco-command-on-recieve: "/eco give {player} {amount}"       # Specifies the command which is executed when a player receives a bounty of economy type
+
+#Random Bounties (Requested by TEC4TUDO)
+use-random: false                                           # Activates the random bounty function (Depends on the eco function enabled. The random generator will not generate item bounties but rather economy bounties, why you ask? Well, how do I put it, I'm lazy)
+interval: "1_h:1_m:1_s-2_h:2_m:2_s"                                   # 1m = 1 minute, 1h = 1 hour, 1s = 1 second. Add a - between times to get a Random Interval between those two.
+amount: "100-10000"                                         # The amount range, the plugin chooses from when setting the bounties
+
+

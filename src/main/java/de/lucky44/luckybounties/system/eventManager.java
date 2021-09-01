@@ -76,7 +76,23 @@ public class eventManager implements Listener {
                 assert sKM != null;
                 String UUID = sKM.getOwningPlayer().getUniqueId().toString();
 
-                guiManager.showBountySetMenu(p,Bukkit.getPlayer(java.util.UUID.fromString(UUID)));
+                if(LuckyBounties.instance.useItems && !LuckyBounties.instance.economy)
+                    guiManager.showBountySetMenu(p,Bukkit.getPlayer(java.util.UUID.fromString(UUID)));
+
+                if(LuckyBounties.instance.economy) {
+
+                    bounty mB = LuckyBounties.getEcoBounty(UUID);
+
+                    if(mB != null) {
+                        mB.moneyPayment += LuckyBounties.instance.eco_amount;
+                    }
+                    else {
+                        bounty b = new bounty(UUID,LuckyBounties.instance.eco_amount);
+                        LuckyBounties.bounties.add(b);
+                    }
+
+                    LuckyBounties.doShit(p.getUniqueId().toString(), LuckyBounties.instance.eco_amount);
+                }
             }
             else if(clickedItem.getType() == Material.FEATHER && clickedSlot == 8 && p.isOp()){
 
@@ -165,7 +181,18 @@ public class eventManager implements Listener {
 
             //Drop the bounties of killed player
             for(bounty b : bounties){
-                Bukkit.getWorld("world").dropItem(killed.getLocation(),b.payment.converted);
+
+                if(b.type == 0) {
+                    Bukkit.getWorld("world").dropItem(killed.getLocation(),b.payment.converted);
+                }
+                else{
+
+                    String command = LuckyBounties.instance.eco_set;
+                    command.replace("{player}",killerP.getName());
+                    command.replace("{amount}",Float.toString(b.moneyPayment));
+
+                    Bukkit.dispatchCommand(LuckyBounties.instance.console, command);
+                }
             }
 
             //Clear the bounties of killed player
