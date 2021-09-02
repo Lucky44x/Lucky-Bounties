@@ -83,10 +83,13 @@ public class guiManager {
                 if(LuckyBounties.instance.economy) {
                     ItemStack heGotThemMoneyz = new ItemStack(LuckyBounties.moneyz);
                     ItemMeta iM =heGotThemMoneyz.getItemMeta();
-                    iM.setDisplayName(ChatColor.BOLD + ChatColor.GOLD.toString() + "Money on kill");
+                    iM.setDisplayName(ChatColor.BOLD + ChatColor.GOLD.toString() + "Bounty");
                     ArrayList<String> lore = new ArrayList<>();
                     lore.add(ChatColor.GOLD + "" + bounties.get(i).moneyPayment + LuckyBounties.instance.economy_name);
                     iM.setLore(lore);
+                    heGotThemMoneyz.setItemMeta(iM);
+
+                    gui.setItem(i +(i+1) + 18, heGotThemMoneyz);
                 }
 
             }
@@ -127,6 +130,11 @@ public class guiManager {
 
         bounty b = new bounty(toSet.getUniqueId().toString(),iS);
         LuckyBounties.bounties.add(b);
+
+        if(LuckyBounties.instance.useMessages){
+            String mS = LuckyBounties.instance.setPlayerMessage.replace("{player}",p.getDisplayName()).replace("{amount}", iS.getAmount() + "x " + iS.getType()).replace("{target}", toSet.getDisplayName());
+            Bukkit.broadcastMessage(mS);
+        }
 
         showSpecificMenu(p,toSet);
 

@@ -21,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
+import java.util.UUID;
 
 public class eventManager implements Listener {
 
@@ -91,7 +92,18 @@ public class eventManager implements Listener {
                         LuckyBounties.bounties.add(b);
                     }
 
-                    LuckyBounties.doShit(p.getUniqueId().toString(), LuckyBounties.instance.eco_amount);
+                    Player p1 = Bukkit.getPlayer(java.util.UUID.fromString(UUID));
+                    String p1Name = "NAN";
+                    if(p1 != null)
+                        p1Name = p1.getDisplayName();
+
+                    if(LuckyBounties.instance.useMessages){
+                        String mS = LuckyBounties.instance.setPlayerMessage.replace("{player}",p.getDisplayName()).replace("{amount}", Float.toString(LuckyBounties.instance.eco_amount) + LuckyBounties.instance.economy_name).replace("{target}", p1Name);
+                        Bukkit.broadcastMessage(mS);
+                    }
+
+                    LuckyBounties.doShit(p, LuckyBounties.instance.eco_amount, 0);
+                    guiManager.showSpecificMenu(p, p1);
                 }
             }
             else if(clickedItem.getType() == Material.FEATHER && clickedSlot == 8 && p.isOp()){
@@ -171,11 +183,11 @@ public class eventManager implements Listener {
             List<bounty> bounties = LuckyBounties.getBounties(killed.getUniqueId().toString());
 
             if(bounties.size() == 1 && !LuckyBounties.instance.messageSing.equals("")){
-                String m = LuckyBounties.instance.messageSing.replace("{Killer}",killerP.getDisplayName()).replace("{Killed}",killed.getDisplayName());
+                String m = LuckyBounties.instance.messageSing.replace("{killer}",killerP.getDisplayName()).replace("{killed}",killed.getDisplayName());
                 e.setDeathMessage(m);
             }
             else if(bounties.size() > 1 && !LuckyBounties.instance.messageMulti.equals("")){
-                String m = LuckyBounties.instance.messageMulti.replace("{Killer}",killerP.getDisplayName()).replace("{Killed}",killed.getDisplayName());
+                String m = LuckyBounties.instance.messageMulti.replace("{killer}",killerP.getDisplayName()).replace("{killed}",killed.getDisplayName());
                 e.setDeathMessage(m);
             }
 
@@ -187,11 +199,8 @@ public class eventManager implements Listener {
                 }
                 else{
 
-                    String command = LuckyBounties.instance.eco_set;
-                    command.replace("{player}",killerP.getName());
-                    command.replace("{amount}",Float.toString(b.moneyPayment));
+                    LuckyBounties.instance.doShit(killerP, b.moneyPayment, 1);
 
-                    Bukkit.dispatchCommand(LuckyBounties.instance.console, command);
                 }
             }
 

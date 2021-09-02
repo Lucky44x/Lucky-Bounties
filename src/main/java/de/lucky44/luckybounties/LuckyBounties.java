@@ -11,6 +11,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -20,8 +21,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class LuckyBounties extends JavaPlugin {
+
+    //TODO: Offload the whole bounty set procedure into a function for ease of access
 
     //Ey, you, yeah you, I see you're in my code. I'm gonna let you in on a little secret:
     //You know how you can see why this code is made by me? Exactly ... THE FUCKING COMMENTS
@@ -53,8 +57,14 @@ public class LuckyBounties extends JavaPlugin {
     public static ItemStack moneyz = new ItemStack(Material.GOLD_NUGGET);
     public boolean useItems = true;
 
+    //Custom messages
+    public String setPlayerMessage = "";
+    public String setConsoleMessage = "";
+    public boolean useMessages = false;
+
     //Economy
     public boolean economy = false;
+    public boolean allowDebt = false;
     public float eco_amount = 100;
     public String economy_name = "$";
     public String eco_set = "";
@@ -62,10 +72,8 @@ public class LuckyBounties extends JavaPlugin {
 
     //Random stuff
     public boolean rand_bounty = false;
-    public String interval = "1h";
     public long maxDelay, minDelay;
     public float maxAmount, minAmount;
-    public String rand_command = "";
 
 
     //OH MY FUCKING GOD, WHY TF DID I CODE THIS LIKE IT IS. THIS IS A FUCKING NIGHTMARE
@@ -78,11 +86,68 @@ public class LuckyBounties extends JavaPlugin {
         if(instance == null)
             instance = this;
 
+        loadConfig(null);
+
+        try {
+            fileManager.LoadBounties();
+        } catch (IOException e) {
+            getLogger().info(ChatColor.RED + "Loading bounties failed");
+        }
+
+        getLogger().info(ChatColor.GREEN + "Loaded bounties");
+
+        //Loading all the system stuff
+        commandManager cM = new commandManager();
+        Objects.requireNonNull(getCommand("bounties")).setExecutor(cM);
+        getCommand("bounties").setTabCompleter(cM);
+
+        getServer().getPluginManager().registerEvents(new eventManager(), this);
+
+        //Setting ItemStacks for the GUI
+        ItemMeta meta = gray.getItemMeta();
+        assert meta != null;
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.setDisplayName("-");
+        gray.setItemMeta(meta);
+
+        meta = green.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.GREEN + ChatColor.BOLD.toString() + "CONFIRM");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        green.setItemMeta(meta);
+
+        meta = red.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.RED + ChatColor.BOLD.toString() + "CANCEL");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        red.setItemMeta(meta);
+
+        meta = set.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "SET BOUNTY");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        set.setItemMeta(meta);
+
+        meta = clear.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.YELLOW + "Clear bounties");
+        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        clear.setItemMeta(meta);
+
+        if(rand_bounty)
+            Bukkit.getScheduler().runTaskLaterAsynchronously(this, BountyRandomizer::run, maxDelay);
+    }
+
+    public void loadConfig(Player p){
         this.saveDefaultConfig();
+
         config = this.getConfig();
 
         messageSing = config.getString("KillMessageSing");
         messageMulti = config.getString("KillMessageMult");
+
+        eco_set = config.getString("eco-command-on-set");
+        eco_get = config.getString("eco-command-on-receive");
 
         String s = config.getString("bountyRemove");
         remove = convertToPermission(s);
@@ -94,6 +159,7 @@ public class LuckyBounties extends JavaPlugin {
         useItems = config.getBoolean("use-items");
         economy = config.getBoolean("use-economy");
         rand_bounty = economy && config.getBoolean("use-random");
+        useMessages = config.getBoolean("use-setMessages");
 
         //Get max and min delay for random function
         String constraints = config.getString("interval");
@@ -153,61 +219,29 @@ public class LuckyBounties extends JavaPlugin {
         parts = amount.split("-");
 
         float f1 = Float.parseFloat(parts[0]);
-        float f2 = Float.parseFloat(parts[1]);
+        float f2 = -1;
+
+        if(parts.length > 1){
+            f2 = Float.parseFloat(parts[1]);
+        }
 
         maxAmount = Math.max(f1,f2);
         minAmount = Math.min(f1,f2);
 
-        rand_command = config.getString("random-set-command");
-
-        try {
-            fileManager.LoadBounties();
-        } catch (IOException e) {
-            getLogger().info(ChatColor.RED + "Loading bounties failed");
+        if(f2 == -1){
+            minAmount = maxAmount;
         }
 
-        getLogger().info(ChatColor.GREEN + "Loaded bounties");
+        allowDebt = config.getBoolean("allow-debt");
 
-        //Loading all the system stuff
-        commandManager cM = new commandManager();
-        Objects.requireNonNull(getCommand("bounties")).setExecutor(cM);
-        getCommand("bounties").setTabCompleter(cM);
+        setPlayerMessage = config.getString("BountySetMessage-player");
+        setConsoleMessage = config.getString("BountySetMessage-console");
 
-        getServer().getPluginManager().registerEvents(new eventManager(), this);
+        getLogger().info(ChatColor.GREEN + "config loaded!");
 
-        //Setting ItemStacks for the GUI
-        ItemMeta meta = gray.getItemMeta();
-        assert meta != null;
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        meta.setDisplayName("-");
-        gray.setItemMeta(meta);
-
-        meta = green.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(ChatColor.GREEN + ChatColor.BOLD.toString() + "CONFIRM");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        green.setItemMeta(meta);
-
-        meta = red.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(ChatColor.RED + ChatColor.BOLD.toString() + "CANCEL");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        red.setItemMeta(meta);
-
-        meta = set.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + "SET BOUNTY");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        set.setItemMeta(meta);
-
-        meta = clear.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(ChatColor.YELLOW + "Clear bounties");
-        meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        clear.setItemMeta(meta);
-
-        if(rand_bounty)
-            Bukkit.getScheduler().runTaskLaterAsynchronously(this, BountyRandomizer::run, maxDelay);
+        if(p != null){
+            p.sendMessage(ChatColor.GREEN + "config reloaded!");
+        }
     }
 
     @Override
@@ -223,10 +257,17 @@ public class LuckyBounties extends JavaPlugin {
         getLogger().info(ChatColor.GREEN + "Bounties saved");
     }
 
-    public static void doShit(String playerName, float amount){
-        String command = LuckyBounties.instance.eco_get;
-        command.replace("{player}",playerName);
-        command.replace("{amount}",Float.toString(amount));
+    public static void doShit(Player p, float amount, int type){
+        String command = type == 0 ? instance.eco_set : instance.eco_get;
+
+        String playerName = "";
+
+        playerName = p.getName();
+
+        command = command.replace("{player}",playerName);
+        command = command.replace("{amount}",Float.toString(amount));
+
+        Bukkit.getLogger().info("executing command: " + command);
 
         Bukkit.dispatchCommand(LuckyBounties.instance.console, command);
     }

@@ -32,24 +32,40 @@ public class BountyRandomizer{
         }
         //---------------------------------------
 
-        if(set != null){
-            bounty mB = LuckyBounties.getEcoBounty(set.getUniqueId().toString());
+        final Player tmpSet = set;
 
-            if(mB != null) {
-                mB.moneyPayment += LuckyBounties.instance.eco_amount;
+        Bukkit.getScheduler().runTask(LuckyBounties.instance, () -> {
+            if(tmpSet != null){
+                bounty mB = LuckyBounties.getEcoBounty(tmpSet.getUniqueId().toString());
+
+                if(mB != null) {
+                    mB.moneyPayment += LuckyBounties.instance.eco_amount;
+                }
+                else {
+                    bounty b = new bounty(tmpSet.getUniqueId().toString(), random);
+                    LuckyBounties.bounties.add(b);
+                }
             }
-            else {
-                bounty b = new bounty(set.getUniqueId().toString(), random);
-                LuckyBounties.bounties.add(b);
-            }
-        }
+        });
 
         long randTime = LuckyBounties.instance.maxDelay;
         if(LuckyBounties.instance.minDelay != -1){
             randTime = LuckyBounties.instance.minDelay + r.nextLong() * (LuckyBounties.instance.maxDelay - LuckyBounties.instance.minDelay);
         }
 
-        Bukkit.getLogger().info("Bounty was set: " + random + " New randTime: " + (randTime / 20) + "s");
+        String name = "NAN";
+
+        if(set != null) {
+
+            name = set.getDisplayName();
+
+            if(LuckyBounties.instance.useMessages){
+                String mS = LuckyBounties.instance.setConsoleMessage.replace("{target}",set.getDisplayName()).replace("{amount}",random + LuckyBounties.instance.economy_name);
+                Bukkit.broadcastMessage(mS);
+            }
+        }
+
+        Bukkit.getLogger().info("Bounty was set on " + name + "'s head" + ": " + random + LuckyBounties.instance.economy_name + " New randTime: " + (randTime / 20) + "s");
 
         final long time = randTime;
 
