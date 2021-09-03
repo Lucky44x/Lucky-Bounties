@@ -14,6 +14,8 @@ use-items: true #Toggle the option to set an Item as a bounty
 
 #Economy (Thanks to TEC4TUDO for coming up with the command idea)
 use-economy: false                                          # Makes players able to type eco:{amount} after the bounty set command to set a eco amount
+
+#Debt prevention is currently not working (While I'm figuring this out, you can remove an amount off the Players' bounty by using /bounties remove <Player> eco:<amount>)
 allow-debt: false                                           # Determines whether a player should be able to set a bounty with a higher reward than his current balance
 economy-default-amount: 100                                 # When Items are disabled, this amount of money will be added to the bounty when the setBounty button is clicked (since I'm too lazy to implement an anvil GUI)
 economy-item: gold_nugget                                   # The item which gets chosen to represent the money in the bounties menu
