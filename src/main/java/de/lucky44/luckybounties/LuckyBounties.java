@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties;
 
+import de.lucky44.luckybounties.bstats.Metrics;
 import de.lucky44.luckybounties.system.BountyRandomizer;
 import de.lucky44.luckybounties.system.commandManager;
 import de.lucky44.luckybounties.system.eventManager;
@@ -80,6 +81,11 @@ public class LuckyBounties extends JavaPlugin {
 
     @Override
     public void onEnable(){
+
+        //Enable bStats
+        int pluginId = 12684;
+        Metrics metrics = new Metrics(this, pluginId);
+
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
         console = Bukkit.getConsoleSender();
 
