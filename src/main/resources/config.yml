@@ -27,3 +27,6 @@ eco-command-on-receive: "eco give {player} {amount}"       # Specifies the comma
 use-random: false                                           # Activates the random bounty function (Depends on the eco function enabled. The random generator will not generate item bounties but rather economy bounties, why you ask? Well, how do I put it, I'm lazy)
 interval: "1_h:1_m:1_s-2_h:2_m:2_s"                         # 1m = 1 minute, 1h = 1 hour, 1s = 1 second. Add a - between times to get a Random Interval between those two.
 amount: "100-10000"                                         # The amount range, the plugin chooses from when setting the bounties
+
+#Bounties on event
+kill-bounty: "bounties set {killer} eco:200"                # Executes a command (In this case adding a bounty) when a player kills another player without bounty, set to "false" or "" to disable

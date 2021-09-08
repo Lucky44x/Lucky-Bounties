@@ -190,6 +190,17 @@ public class eventManager implements Listener {
                 String m = LuckyBounties.instance.messageMulti.replace("{killer}",killerP.getDisplayName()).replace("{killed}",killed.getDisplayName());
                 e.setDeathMessage(m);
             }
+            else if(bounties.size() == 0 && !LuckyBounties.instance.killBounty.equals("false")){
+                String command = LuckyBounties.instance.killBounty;
+
+                String playerName = "";
+
+                playerName = killer.getName();
+
+                command = command.replace("{killer}",playerName);
+
+                Bukkit.dispatchCommand(LuckyBounties.instance.console, command);
+            }
 
             //Drop the bounties of killed player
             for(bounty b : bounties){
@@ -199,7 +210,7 @@ public class eventManager implements Listener {
                 }
                 else{
 
-                    LuckyBounties.instance.doShit(killerP, b.moneyPayment, 1);
+                    LuckyBounties.doShit(killerP, b.moneyPayment, 1);
 
                 }
             }

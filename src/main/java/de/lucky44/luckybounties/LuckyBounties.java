@@ -76,6 +76,9 @@ public class LuckyBounties extends JavaPlugin {
     public long maxDelay, minDelay;
     public float maxAmount, minAmount;
 
+    //Event bounties
+    public String killBounty = "false";
+
 
     //OH MY FUCKING GOD, WHY TF DID I CODE THIS LIKE IT IS. THIS IS A FUCKING NIGHTMARE
 
@@ -243,6 +246,9 @@ public class LuckyBounties extends JavaPlugin {
         setPlayerMessage = config.getString("BountySetMessage-player");
         setConsoleMessage = config.getString("BountySetMessage-console");
 
+        killBounty = config.getString("kill-bounty");
+        killBounty = killBounty == null || killBounty == "" ? "false" : killBounty;
+
         getLogger().info(ChatColor.GREEN + "config loaded!");
 
         if(p != null){
@@ -272,8 +278,6 @@ public class LuckyBounties extends JavaPlugin {
 
         command = command.replace("{player}",playerName);
         command = command.replace("{amount}",Float.toString(amount));
-
-        Bukkit.getLogger().info("executing command: " + command);
 
         Bukkit.dispatchCommand(LuckyBounties.instance.console, command);
     }
