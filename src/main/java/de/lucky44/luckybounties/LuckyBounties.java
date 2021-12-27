@@ -86,7 +86,7 @@ public class LuckyBounties extends JavaPlugin {
     public void onEnable(){
 
         //Enable bStats
-        int pluginId = 12684;
+        int pluginId = <PLUGINID>;
         Metrics metrics = new Metrics(this, pluginId);
 
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
