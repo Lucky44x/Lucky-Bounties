@@ -1,13 +1,12 @@
 package de.lucky44.luckybounties.util;
 import org.bukkit.Material;
+import org.bukkit.block.ShulkerBox;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.BookMeta;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.potion.*;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class item {
@@ -23,12 +22,14 @@ public class item {
 
     public String[] extras;
 
+    public item[] content;
+
     public transient ItemStack converted = null;
 
     public item(ItemStack iS){
 
         //Convert ItemStack to custom ItemData which is better suited to be saved and loaded by gson
-        //I did this 'cause i'm to lazy to figure out how to load and save ItemStacks directly to json
+        //I did this 'cause I'm to lazy to figure out how to load and save ItemStacks directly to json
 
         Material m = iS.getType();
         ItemMeta iM = iS.getItemMeta();
@@ -81,6 +82,22 @@ public class item {
             if(bM.getGeneration() != null)
                 gen = bM.getGeneration().toString();
             extras[2] = gen;
+        }
+        else if(iM instanceof BlockStateMeta && ((BlockStateMeta) iM).getBlockState() instanceof ShulkerBox){
+
+            ArrayList<item> newItems = new ArrayList<>();
+
+            BlockStateMeta bSM = (BlockStateMeta) iM;
+
+            ShulkerBox sB = (ShulkerBox) bSM.getBlockState();
+
+            for(ItemStack I : sB.getInventory().getContents()){
+                if(I != null){
+                    newItems.add(new item(I));
+                }
+            }
+
+            content = newItems.toArray(new item[0]);
         }
         else{
             dur = iS.getDurability();
@@ -167,6 +184,24 @@ public class item {
             }
 
             i.setItemMeta(bM);
+        }
+        else if(meta instanceof BlockStateMeta && ((BlockStateMeta) meta).getBlockState() instanceof ShulkerBox){
+            ArrayList<ItemStack> newItems = new ArrayList<>();
+
+            BlockStateMeta bSM = (BlockStateMeta) meta;
+
+            ShulkerBox sB = (ShulkerBox) bSM.getBlockState();
+
+            for(item I : content){
+                newItems.add(I.toItem());
+            }
+
+            sB.getInventory().setContents(newItems.toArray(new ItemStack[0]));
+
+            bSM.setBlockState(sB);
+            sB.update();
+
+            i.setItemMeta(bSM);
         }
         else {
             meta.setDisplayName(DisplayName);

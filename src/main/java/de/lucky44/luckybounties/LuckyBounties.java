@@ -79,7 +79,6 @@ public class LuckyBounties extends JavaPlugin {
     //Event bounties
     public String killBounty = "false";
 
-
     //OH MY FUCKING GOD, WHY TF DID I CODE THIS LIKE IT IS. THIS IS A FUCKING NIGHTMARE
 
     @Override
