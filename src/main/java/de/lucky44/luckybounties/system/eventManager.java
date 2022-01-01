@@ -6,6 +6,7 @@ import de.lucky44.luckybounties.util.permissionType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -174,20 +175,19 @@ public class eventManager implements Listener {
     @EventHandler
     public static void onKill(PlayerDeathEvent e){
         Player killed = e.getEntity();
-        Entity killer = e.getEntity().getKiller();
+        Player killer = e.getEntity().getKiller();
 
         //Check if Player was killed
-        if(killer instanceof Player){
-            Player killerP = (Player)killer;
+        if(killer != null){
 
             List<bounty> bounties = LuckyBounties.getBounties(killed.getUniqueId().toString());
 
             if(bounties.size() == 1 && !LuckyBounties.instance.messageSing.equals("")){
-                String m = LuckyBounties.instance.messageSing.replace("{killer}",killerP.getDisplayName()).replace("{killed}",killed.getDisplayName());
+                String m = LuckyBounties.instance.messageSing.replace("{killer}", killer.getDisplayName()).replace("{killed}",killed.getDisplayName());
                 e.setDeathMessage(m);
             }
             else if(bounties.size() > 1 && !LuckyBounties.instance.messageMulti.equals("")){
-                String m = LuckyBounties.instance.messageMulti.replace("{killer}",killerP.getDisplayName()).replace("{killed}",killed.getDisplayName());
+                String m = LuckyBounties.instance.messageMulti.replace("{killer}", killer.getDisplayName()).replace("{killed}",killed.getDisplayName());
                 e.setDeathMessage(m);
             }
             else if(bounties.size() == 0 && !LuckyBounties.instance.killBounty.equals("false")){
@@ -206,11 +206,14 @@ public class eventManager implements Listener {
             for(bounty b : bounties){
 
                 if(b.type == 0) {
-                    Bukkit.getWorld("world").dropItem(killed.getLocation(),b.payment.converted);
+
+                    World dropWorld = killed.getWorld();
+
+                    dropWorld.dropItem(killed.getLocation(),b.payment.converted);
                 }
                 else{
 
-                    LuckyBounties.doShit(killerP, b.moneyPayment, 1);
+                    LuckyBounties.doShit(killer, b.moneyPayment, 1);
 
                 }
             }
