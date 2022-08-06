@@ -3,6 +3,7 @@ package de.lucky44.luckybounties.system;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.util.bounty;
 import de.lucky44.luckybounties.util.permissionType;
+import de.lucky44.luckybounties.util.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,6 +18,7 @@ import org.bukkit.event.inventory.DragType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -25,6 +27,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class eventManager implements Listener {
+
+    @EventHandler
+    public static void OnPlayerJoin(PlayerJoinEvent e){
+        LuckyBounties.players.computeIfAbsent(e.getPlayer().getUniqueId(), k -> new playerData(e.getPlayer().getName(), e.getPlayer().getUniqueId()));
+    }
 
     @EventHandler
     public static void OnSlotClick(InventoryClickEvent e){
@@ -178,7 +185,7 @@ public class eventManager implements Listener {
         Player killer = e.getEntity().getKiller();
 
         //Check if Player was killed
-        if(killer != null){
+        if(killer != null && killer != killed){
 
             List<bounty> bounties = LuckyBounties.getBounties(killed.getUniqueId().toString());
 
@@ -217,6 +224,13 @@ public class eventManager implements Listener {
 
                 }
             }
+
+            //Update stats
+            playerData killerDat = LuckyBounties.players.computeIfAbsent(killer.getUniqueId(), k -> new playerData(killer.getName(), killer.getUniqueId()));
+            killerDat.onCollect();
+
+            playerData killedDat = LuckyBounties.players.computeIfAbsent(killer.getUniqueId(), k -> new playerData(killed.getName(), killed.getUniqueId()));
+            killedDat.onDeath();
 
             //Clear the bounties of killed player
             LuckyBounties.clearBounties(killed.getUniqueId().toString());

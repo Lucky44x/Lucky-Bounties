@@ -1,12 +1,15 @@
 package de.lucky44.luckybounties;
 
 import de.lucky44.luckybounties.bstats.Metrics;
+import de.lucky44.luckybounties.papi.LuckyBountiesPAPIExtension;
 import de.lucky44.luckybounties.system.BountyRandomizer;
+import de.lucky44.luckybounties.system.ChatUpdater;
 import de.lucky44.luckybounties.system.commandManager;
 import de.lucky44.luckybounties.system.eventManager;
 import de.lucky44.luckybounties.util.bounty;
 import de.lucky44.luckybounties.util.fileManager;
 import de.lucky44.luckybounties.util.permissionType;
+import de.lucky44.luckybounties.util.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,20 +22,21 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class LuckyBounties extends JavaPlugin {
 
     //TODO: Offload the whole bounty set procedure into a function for ease of access
 
     //Ey, you, yeah you, I see you're in my code. I'm gonna let you in on a little secret:
-    //You know how you can see why this code is made by me? Exactly ... THE FUCKING COMMENTS
+    //You know how you can see how this code is written by me? Exactly ... it's unreadable
 
     //Other
     public static LuckyBounties instance;
+
+    //Players
+    public static playerData mostWorth;
+    public static playerData mostCol;
 
     public FileConfiguration config;
 
@@ -42,8 +46,17 @@ public class LuckyBounties extends JavaPlugin {
     public String messageSing = "";
     public String messageMulti = "";
 
+    //Placeholder API
+    public boolean papi = false;
+
+    //Chat Update Message
+    public String chatUpdateMessage;
+    public long chatUpdateDelay;
+    public boolean ranking_M_enabled;
+
     //Bounties
     public static ArrayList<bounty> bounties = new ArrayList<>();
+    public static Map<UUID, playerData> players = new HashMap<>();
 
     //Items for GUI panels
     public static ItemStack gray = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -53,7 +66,7 @@ public class LuckyBounties extends JavaPlugin {
     public static ItemStack clear = new ItemStack(Material.FEATHER);
 
 
-    //New custom Stuf IDK HELP MEEMEMEMMEMEMEEEEE
+    //Economy-Commands?
     public ConsoleCommandSender console;
     public static ItemStack moneyz = new ItemStack(Material.GOLD_NUGGET);
     public boolean useItems = true;
@@ -79,13 +92,13 @@ public class LuckyBounties extends JavaPlugin {
     //Event bounties
     public String killBounty = "false";
 
-    //OH MY FUCKING GOD, WHY TF DID I CODE THIS LIKE IT IS. THIS IS A FUCKING NIGHTMARE
+    //I am getting a headache every single time I open this project
 
     @Override
     public void onEnable(){
 
         //Enable bStats
-        int pluginId = <PLUGINID>;
+        int pluginId = 	<ID>;
         Metrics metrics = new Metrics(this, pluginId);
 
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
@@ -98,8 +111,9 @@ public class LuckyBounties extends JavaPlugin {
 
         try {
             fileManager.LoadBounties();
+            fileManager.LoadPlayers();
         } catch (IOException e) {
-            getLogger().info(ChatColor.RED + "Loading bounties failed");
+            getLogger().info(ChatColor.RED + "Loading data failed");
         }
 
         getLogger().info(ChatColor.GREEN + "Loaded bounties");
@@ -142,8 +156,17 @@ public class LuckyBounties extends JavaPlugin {
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
         clear.setItemMeta(meta);
 
+        if(papi){
+            if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                new LuckyBountiesPAPIExtension(this).register();
+            }
+        }
+
         if(rand_bounty)
             Bukkit.getScheduler().runTaskLaterAsynchronously(this, BountyRandomizer::run, maxDelay);
+
+        if(ranking_M_enabled)
+            Bukkit.getScheduler().runTaskLaterAsynchronously(this, ChatUpdater::run, chatUpdateDelay);
     }
 
     public void loadConfig(Player p){
@@ -169,34 +192,13 @@ public class LuckyBounties extends JavaPlugin {
         rand_bounty = economy && config.getBoolean("use-random");
         useMessages = config.getBoolean("use-setMessages");
 
-        //Get max and min delay for random function
-        String constraints = config.getString("interval");
+        if(rand_bounty){
+            //Get max and min delay for random function
+            String constraints = config.getString("interval");
 
-        String[] parts = constraints.split("-");
-        long Ticks1 = 0, Ticks2 = parts.length > 1 ? 0 : -1;
-        String[] times = parts[0].split(":");
-        for(String time : times){
-            String[] units = time.split("_");
-            long base = Long.parseLong(units[0]);
-            long multiplier = 0;
-            switch(units[1]){
-                case("h"):
-                    multiplier = 72000;
-                    break;
-                case("m"):
-                    multiplier = 1200;
-                    break;
-                case("s"):
-                    multiplier = 20;
-                    break;
-            }
-
-            Ticks1 += base * multiplier;
-        }
-
-        if(parts.length > 1) {
-
-            times = parts[1].split(":");
+            String[] parts = constraints.split("-");
+            long Ticks1 = 0, Ticks2 = parts.length > 1 ? 0 : -1;
+            String[] times = parts[0].split(":");
             for(String time : times){
                 String[] units = time.split("_");
                 long base = Long.parseLong(units[0]);
@@ -213,31 +215,54 @@ public class LuckyBounties extends JavaPlugin {
                         break;
                 }
 
-                Ticks2 += base * multiplier;
+                Ticks1 += base * multiplier;
             }
 
-        }
+            if(parts.length > 1) {
 
-        maxDelay = Math.max(Ticks1,Ticks2);
-        minDelay = Math.min(Ticks1,Ticks2);
+                times = parts[1].split(":");
+                for(String time : times){
+                    String[] units = time.split("_");
+                    long base = Long.parseLong(units[0]);
+                    long multiplier = 0;
+                    switch(units[1]){
+                        case("h"):
+                            multiplier = 72000;
+                            break;
+                        case("m"):
+                            multiplier = 1200;
+                            break;
+                        case("s"):
+                            multiplier = 20;
+                            break;
+                    }
 
-        //Get max and min constraints for eco amount
-        String amount = config.getString("amount");
+                    Ticks2 += base * multiplier;
+                }
 
-        parts = amount.split("-");
+            }
 
-        float f1 = Float.parseFloat(parts[0]);
-        float f2 = -1;
+            maxDelay = Math.max(Ticks1,Ticks2);
+            minDelay = Math.min(Ticks1,Ticks2);
 
-        if(parts.length > 1){
-            f2 = Float.parseFloat(parts[1]);
-        }
+            //Get max and min constraints for eco amount
+            String amount = config.getString("amount");
 
-        maxAmount = Math.max(f1,f2);
-        minAmount = Math.min(f1,f2);
+            parts = amount.split("-");
 
-        if(f2 == -1){
-            minAmount = maxAmount;
+            float f1 = Float.parseFloat(parts[0]);
+            float f2 = -1;
+
+            if(parts.length > 1){
+                f2 = Float.parseFloat(parts[1]);
+            }
+
+            maxAmount = Math.max(f1,f2);
+            minAmount = Math.min(f1,f2);
+
+            if(f2 == -1){
+                minAmount = maxAmount;
+            }
         }
 
         allowDebt = config.getBoolean("allow-debt");
@@ -248,10 +273,40 @@ public class LuckyBounties extends JavaPlugin {
         killBounty = config.getString("kill-bounty");
         killBounty = killBounty == null || killBounty == "" ? "false" : killBounty;
 
+        papi = config.getBoolean("enable-papi");
+
         getLogger().info(ChatColor.GREEN + "config loaded!");
 
         if(p != null){
             p.sendMessage(ChatColor.GREEN + "config reloaded!");
+        }
+
+        ranking_M_enabled = config.getBoolean("enable-ranking-message");
+
+        if(ranking_M_enabled) {
+            //Get Timing for chatUpdate
+            String chatDelay = config.getString("ranking-message-interval");
+            String[] times = chatDelay.split(":");
+            for (String time : times) {
+                String[] units = time.split("_");
+                long base = Long.parseLong(units[0]);
+                long multiplier = 0;
+                switch (units[1]) {
+                    case ("h"):
+                        multiplier = 72000;
+                        break;
+                    case ("m"):
+                        multiplier = 1200;
+                        break;
+                    case ("s"):
+                        multiplier = 20;
+                        break;
+                }
+
+                chatUpdateDelay = base * multiplier;
+            }
+
+            chatUpdateMessage = config.getString("ranking-message");
         }
     }
 
@@ -261,6 +316,7 @@ public class LuckyBounties extends JavaPlugin {
 
         try {
             fileManager.SaveBounties(bounties.toArray(new bounty[bounties.size()]));
+            fileManager.SavePlayers(players.values().toArray(new playerData[players.size()]));
         } catch (IOException e) {
             getLogger().info(ChatColor.RED + "Saving bounties failed");
         }

@@ -30,3 +30,9 @@ amount: "100-10000"                                         # The amount range, 
 
 #Bounties on event
 kill-bounty: "bounties set {killer} eco:200"                # Executes a command (In this case adding a bounty) when a player kills another player without bounty, set to "false" or "" to disable
+
+#Placeholder API / Ranking System (Thanks to jokbon for coming up with the idea)
+enable-papi: true                                           #enables the PlaceHolderAPI Extension ("lb_collected" - the number of bounties a player has collected, "lb_bounty" - the number of bounties set on a player, "top_bounty" - player with the highest bounty, "top_col" - player who collected the most bounties)
+enable-ranking-message: true                                #Every X ticks a message will be sent (Configure below)
+ranking-message-interval: "1_h:1_m:1_s"                     # 1m = 1 minute, 1h = 1 hour, 1s = 1 second
+ranking-message: "&l{player} currently has a total of {amount} bounties on him. &cHunt them down, to get the rewards" #The message (Spigot color codes should be working)

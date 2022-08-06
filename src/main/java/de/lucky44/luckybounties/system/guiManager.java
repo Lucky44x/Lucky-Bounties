@@ -3,6 +3,7 @@ package de.lucky44.luckybounties.system;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.util.bounty;
 import de.lucky44.luckybounties.util.permissionType;
+import de.lucky44.luckybounties.util.playerData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -141,6 +142,10 @@ public class guiManager {
         String s = "";
         if(iS.getAmount() > 1){s = "s";}
         p.sendMessage(ChatColor.GREEN + "Set a bounty of " + iS.getAmount() + " " + iS.getType().toString().toLowerCase() + s + " on " + toSet.getDisplayName() + "'s head.");
+
+        //Update stats
+        LuckyBounties.players.computeIfAbsent(p.getUniqueId(), k -> new playerData(p.getName(), p.getUniqueId())).setBounty();
+        LuckyBounties.players.computeIfAbsent(toSet.getUniqueId(), k -> new playerData(toSet.getName(), toSet.getUniqueId())).onGetSetOn();
     }
 
     public static void cancelBounty(Player p, Player toSet){
