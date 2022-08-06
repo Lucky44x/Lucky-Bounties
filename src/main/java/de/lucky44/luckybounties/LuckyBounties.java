@@ -98,7 +98,7 @@ public class LuckyBounties extends JavaPlugin {
     public void onEnable(){
 
         //Enable bStats
-        int pluginId = 	<ID>;
+        int pluginId = 	<PLUGINID>;
         Metrics metrics = new Metrics(this, pluginId);
 
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
@@ -344,6 +344,12 @@ public class LuckyBounties extends JavaPlugin {
             if(b.UUID.equals(UUID)){
                 bounties.remove(b);
             }
+        }
+
+        playerData pD = players.get(java.util.UUID.fromString(UUID));
+
+        if(pD != null){
+            pD.onDeath();
         }
     }
 
