@@ -98,7 +98,7 @@ public class LuckyBounties extends JavaPlugin {
     public void onEnable(){
 
         //Enable bStats
-        int pluginId = 	<PLUGINID>;
+        int pluginId = 	<PluginID>;
         Metrics metrics = new Metrics(this, pluginId);
 
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
@@ -303,7 +303,7 @@ public class LuckyBounties extends JavaPlugin {
                         break;
                 }
 
-                chatUpdateDelay = base * multiplier;
+                chatUpdateDelay += base * multiplier;
             }
 
             chatUpdateMessage = config.getString("ranking-message");
