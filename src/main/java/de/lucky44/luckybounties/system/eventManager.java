@@ -14,12 +14,10 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.DragType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -174,6 +172,20 @@ public class eventManager implements Listener {
             }
         }
     }
+
+/**    @EventHandler
+    public static void onInventoryClosed(InventoryCloseEvent e){
+        InventoryView v = e.getView();
+        String invName = ChatColor.stripColor(e.getView().getTitle());
+        if(invName.split("'")[1].equals("s head")){
+            SkullMeta sKM = (SkullMeta) v.getItem(1).getItemMeta();
+
+            assert sKM != null;
+            String UUID = sKM.getOwningPlayer().getUniqueId().toString();
+            guiManager.cancelBounty((Player)e.getPlayer(), Bukkit.getPlayer(java.util.UUID.fromString(UUID)));
+        }
+    }
+**/
 
     static boolean isAllowedToClick(Player sender){
         return (sender.isOp() && LuckyBounties.instance.remove == permissionType.OP) || (sender.hasPermission("lb.op") && LuckyBounties.instance.remove == permissionType.LB) || ((sender.hasPermission("lb.op") || sender.isOp()) && LuckyBounties.instance.remove == permissionType.BOTH);

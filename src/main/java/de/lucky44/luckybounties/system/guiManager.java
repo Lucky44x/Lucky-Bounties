@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -127,7 +128,7 @@ public class guiManager {
     }
 
     public static void confirmBounty(Player p,Player toSet){
-        if(!toSet.hasPermission("lb.exempt")){
+        if(toSet.hasPermission("lb.exempt")){
             p.sendMessage(ChatColor.RED + toSet.getName() + " is exempt from bounties");
             return;
         }
@@ -164,6 +165,13 @@ public class guiManager {
     }
 
     public static void cancelBounty(Player p, Player toSet){
+
+        InventoryView iView = p.getOpenInventory();
+
+        if(iView.getItem(4) != null){
+            p.getInventory().addItem(iView.getItem(4));
+        }
+
         showSpecificMenu(p,toSet);
     }
 
