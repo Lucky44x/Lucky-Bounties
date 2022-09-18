@@ -105,6 +105,11 @@ public class guiManager {
     public static void showBountySetMenu(Player sender, Player toSet){
         sender.closeInventory();
 
+        if(!sender.hasPermission("lb.set")){
+            sender.sendMessage(ChatColor.RED + " You are not allowed to set bounties");
+            return;
+        }
+
         Inventory gui = Bukkit.createInventory(sender,InventoryType.DISPENSER,ChatColor.BOLD + "Set bounty on " + toSet.getDisplayName() + "'s head");
 
         gui.setItem(1,getPlayerHead(toSet));
@@ -122,6 +127,16 @@ public class guiManager {
     }
 
     public static void confirmBounty(Player p,Player toSet){
+        if(!toSet.hasPermission("lb.exempt")){
+            p.sendMessage(ChatColor.RED + toSet.getName() + " is exempt from bounties");
+            return;
+        }
+
+        if(!p.hasPermission("lb.set")){
+            p.sendMessage(ChatColor.RED + " You are not allowed to set bounties");
+            return;
+        }
+
 
         ItemStack iS = p.getOpenInventory().getItem(4);
         if(iS == null){

@@ -1,5 +1,5 @@
 name: LuckyBounties
-version: 1.6.1
+version: 1.7
 main: de.lucky44.luckybounties.LuckyBounties
 api-version: 1.14
 
@@ -9,6 +9,15 @@ permissions:
   lb.op:
     default: op
     description: Allows use of operator features of this plugin
+  lb.set:
+    default: true
+    description: Allows setting bounties
+  lb.exempt:
+    default: false
+    description: Exempts the player from being targeted by bounties
+  lb.reload:
+    default: op
+    description: Gives permission to reload the plugin
 
 
 commands:

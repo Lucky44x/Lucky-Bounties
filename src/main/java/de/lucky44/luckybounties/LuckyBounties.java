@@ -98,7 +98,7 @@ public class LuckyBounties extends JavaPlugin {
     public void onEnable(){
 
         //Enable bStats
-        int pluginId = <PLuginID>;
+        int pluginId = <PLUGIN ID>;
         Metrics metrics = new Metrics(this, pluginId);
 
         getLogger().info(ChatColor.GREEN + "Enabling plugin");
@@ -172,7 +172,12 @@ public class LuckyBounties extends JavaPlugin {
     public void loadConfig(Player p){
         this.saveDefaultConfig();
 
-        config = this.getConfig();
+        if(p == null){
+            config = this.getConfig();
+        }
+        else{
+            instance.reloadConfig();
+        }
 
         messageSing = config.getString("KillMessageSing");
         messageMulti = config.getString("KillMessageMult");

@@ -39,9 +39,19 @@ public class commandManager implements CommandExecutor, TabCompleter {
 
                 if(args[0].equals("set")) {
 
+                    if(!sender.hasPermission("lb.set")){
+                        sender.sendMessage(ChatColor.RED + "You are not allowed to set bounties");
+                        return true;
+                    }
+
                     Player set = Bukkit.getPlayer(args[1]);
 
                     if(set != null) {
+
+                        if(set.hasPermission("lb.exempt")){
+                            sender.sendMessage(ChatColor.RED + set.getName() + " is exempt from bounties");
+                            return true;
+                        }
 
                         if(args.length == 3) {
                             if(args[2].contains(":")){
@@ -120,7 +130,7 @@ public class commandManager implements CommandExecutor, TabCompleter {
                 else if(args[0].equals("reload")){
                     p = sender instanceof Player ? (Player)sender : null;
 
-                    if((p != null && !p.isOp()) || p != null)
+                    if((p != null && !p.isOp()) || (p!= null && !p.hasPermission("lb.reload")) || p != null)
                         return true;
 
                     LuckyBounties.instance.loadConfig(p);
