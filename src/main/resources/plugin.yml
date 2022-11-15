@@ -1,0 +1,33 @@
+name: LuckyBounties
+version: 2.3.1
+main: de.lucky44.luckybounties.LuckyBounties
+api-version: 1.14
+
+softdepend: [PlaceholderAPI, Vault]
+
+permissions:
+  lb.op:
+    default: op
+    description: Allows use of operator features of this plugin
+  lb.set:
+    default: true
+    description: Allows setting bounties
+  lb.remove:
+    default: op
+    description: Allows removing bounties
+  lb.exempt:
+    default: false
+    description: Exempts the player from being targeted by bounties
+  lb.reload:
+    default: op
+    description: Gives permission to reload the plugin
+  lb.drop:
+    default: true
+    description: Drops the bounties on kill
+
+
+commands:
+  bounties:
+    aliases: b
+    description: show bounties menu
+    usage: /bounties
