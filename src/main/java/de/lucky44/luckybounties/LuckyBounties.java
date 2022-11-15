@@ -54,8 +54,7 @@ public class LuckyBounties extends JavaPlugin {
     @Override
     public void onEnable(){
         //region bstats
-        int pluginID = <PLUGINID>;
-        Metrics metrics = new Metrics(this, pluginID);
+        Metrics metrics = new Metrics(this, <PLUGINID>);
         //endregion
 
         //region Instancing

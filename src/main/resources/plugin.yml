@@ -13,7 +13,7 @@ permissions:
     default: true
     description: Allows setting bounties
   lb.remove:
-    default: op
+    default: true
     description: Allows removing bounties
   lb.exempt:
     default: false

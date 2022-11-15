@@ -10,6 +10,8 @@ import de.lucky44.luckybounties.util.bounty;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class GUI_BountiesList extends GUI {
 
@@ -43,8 +45,8 @@ public class GUI_BountiesList extends GUI {
         }
 
         int wholeLength = bounties.length;
-        int newLength = wholeLength - (21 * page);
-        if(newLength > 21)
+        int newLength = wholeLength - (27 * page);
+        if(newLength > 27)
             hasNext = true;
         if(page > 0)
             hasLast = true;
@@ -90,12 +92,12 @@ public class GUI_BountiesList extends GUI {
         if(hasLast)
             set(GUIItems.BackItem(), 52);
 
-        int offset = 21 * page;
-        for(int slot = 19; slot < 44; slot++){
-            if(slot-19 + offset >= bounties.length)
+        int offset = 27 * page;
+        for(int slot = 18; slot < 45; slot++){
+            if(slot-18 + offset >= bounties.length)
                 return;
 
-            set(GUIItems.BountyItem(bounties[slot-19 + offset]), slot);
+            set(GUIItems.BountyItem(bounties[slot-18 + offset]), slot);
         }
     }
 
@@ -107,16 +109,67 @@ public class GUI_BountiesList extends GUI {
     @Override
     public void onClick(int slot, ItemStack item) {
 
+        //Clear Feather
         if(slot == 8 && user.hasPermission("lb.op")){
             LuckyBounties.I.clearBounties(target.getUniqueId());
             GUI_BountiesList updated = new GUI_BountiesList(target, page);
             updated.open(user);
         }
 
+        //Set Button
         if(slot == 13 && item.getType() == Material.AMETHYST_SHARD){
             GUI_SetBounty setBountyGUI = new GUI_SetBounty(target);
             setBountyGUI.open(user);
         }
 
+        //Bounty Items Clicked
+        if(slot > 17 && slot < 45){
+
+            if(!user.hasPermission("lb.remove"))
+                return;
+
+            if(item == null)
+                return;
+
+            int offset = 27 * page;
+            int index = slot-18 + offset;
+
+            if(index >= bounties.length)
+                return;
+
+            ItemMeta meta = item.getItemMeta();
+
+            String setterUUID = "_NULL";
+            if(meta.getPersistentDataContainer().has(LuckyBounties.I.dataKey, PersistentDataType.STRING)){
+                setterUUID = meta.getPersistentDataContainer().get(LuckyBounties.I.dataKey, PersistentDataType.STRING);
+            }
+
+            if(!user.hasPermission("lb.op")){
+                if(setterUUID == null || setterUUID.equals("_NULL") || !setterUUID.equals(user.getUniqueId().toString()))
+                    return;
+            }
+
+            if(user.getInventory().firstEmpty() == -1){
+                user.sendMessage(LANG.getText("inventory-full"));
+                user.getWorld().dropItemNaturally(user.getLocation(), LuckyBounties.I.cleanBountyItem(bounties[index]));
+            }
+            else{
+                user.getInventory().addItem(LuckyBounties.I.cleanBountyItem(bounties[index]));
+            }
+
+            LuckyBounties.I.removeBounty(target.getUniqueId(), bounties[index]);
+            GUI_BountiesList newPage = new GUI_BountiesList(target, page);
+            newPage.open(user);
+        }
+
+        //Page Buttons
+        if(slot == 53 && hasNext){
+            GUI_BountiesList newPage = new GUI_BountiesList(target, page + 1);
+            newPage.open(user);
+        }
+        if(slot == 52 && hasLast){
+            GUI_BountiesList newPage = new GUI_BountiesList(target, page - 1);
+            newPage.open(user);
+        }
     }
 }

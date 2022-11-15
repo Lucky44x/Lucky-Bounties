@@ -174,7 +174,7 @@ public class GUIItems {
         }
 
         if(bounties.length > 5){
-            lore.add("...");
+            lore.add(LANG.getText("head-lore-overflow"));
         }
 
         sKM.setLore(lore);
