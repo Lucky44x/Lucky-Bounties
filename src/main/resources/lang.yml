@@ -1,0 +1,50 @@
+#For color or other text variations, please use the spigot color codes with an '&'
+#When the reload command is entered, this file will get reloaded alongside the config
+#Only the parts which have [PLAYERNAME] already in them, will replace it, so changing the cancel-button to '[PLAYERNAME]cancel' will not work
+
+#Do not touch:
+version: "1.4"
+
+#GUI - Titles
+main-gui-title: "&lBOUNTIES"
+player-gui-title: "&l[PLAYERNAME]'s Bounties"
+set-gui-title: "&lSet bounty on [PLAYERNAME]"
+eco-bounty-name: "&6[AMOUNT][SYMBOL]"
+head-lore-format: "&8[AMOUNT]x [TYPE]"
+head-lore-eco-format: "[AMOUNT][SYMBOL]"
+item-lore-set-by: "&8&l Set by [PLAYERNAME]"
+unknown-setter: "UNKNOWN"
+
+#GUI - Buttons
+confirm-button: "&aConfirm"
+cancel-button: "&cCancel"
+next-button: "Next Page"
+back-button: "Back"
+set-button: "Set Bounty"
+clear-button: "Clear Bounties"
+
+#Messages - Errors
+no-bounty-item: "&cPlease set an item as a bounty"
+missing-set-permission: "&cYou are not allowed to set bounties"
+target-exempt: "&c[PLAYERNAME] is exempt from bounties"
+economy-disabled: "&cEconomy isn't enabled"
+player-not-found: "&c[PLAYERNAME] was not found or isn't online"
+not-holding-anything:  "&cYou are not holding anything"
+cannot-afford: "&c You cannot afford to set a bounty of [AMOUNT][SYMBOL]"
+bounty-below-zero: "&cThe payment for a bounty has to be above 0"
+cooldown-not-done: "&c You can't already set another bounty on [TARGET]"
+items-disabled: "&c Items are disabled"
+self-bounty-error: "&c You cannot set a bounty on yourself"
+
+#Messages - Notifications
+reload-complete: "&aReloaded config"
+bounty-set: "&aSet bounty of [AMOUNT]x [ITEM] on [TARGET]"
+bounty-take: "&aYou have taken [TARGET]'s bounties"
+ranking-message: "&l[PLAYERNAME] is wanted for [AMOUNT] bounties. &cHunt them down to collect the reward!"
+removed-bounty: "&aRemoved bounty from [PLAYERNAME]"
+eco-bounty-set: "&aSet bounty of [AMOUNT][SYMBOL]"
+
+#Messages - GLOBAL - Notifications
+bounty-set-global: "[PLAYERNAME] set a bounty of [AMOUNT]x [ITEM] on [TARGET]"
+eco-bounty-set-global: "[PLAYERNAME] set a bounty of [AMOUNT][SYMBOL] on [TARGET]"
+bounty-take-global: "[PLAYERNAME] has taken [TARGET]'s bounties"

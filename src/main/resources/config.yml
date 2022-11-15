@@ -1,0 +1,38 @@
+#Thank you for choosing LuckyBounties, here's some information regarding the config:
+#     The time setting, 'ranking-message-interval' is using the default tps of 20 ticks to operate
+#     So if your Server runs on a higher tick rate, the interval will actually be shorter.
+
+#Do not touch
+version: "1.3"
+
+#==MESSAGES
+#GLOBAL    When these are false, the plugin will default to local messages (Just the player performing the action)
+bounty-set-global: true                     #Sends a notification for everyone to see when a bounty is set              (LANG: bounty-set-global)
+bounty-take-global: true                    #Sends a notification for everyone when a player with bounties is killed    (LANG: bounty-take-global)
+
+#==INTEGRATIONS
+papi-integration: false                     #Activates the PlaceholderAPI integration, so you can use placeholders
+
+#ECONOMY
+vault-integration: false                    #Activates the Vault integration so you can use an economy
+default-amount: 100                         #The default amount of currency that gets set in the bounty menu
+eco-item: gold_nugget                       #The item used to represent your currency
+currency-symbol: "$"
+
+#==ETXRAS
+#RANKING SYSTEM             (LANG: Ranking message)
+send-ranking-message: true                  #Every {ranking_message_interval} h/m/s a public notification, announcing the player with the most bounties will be sent
+ranking-message-interval: "1_h:1_m:1_s"     # 1m = 1 minute, 1h = 1 hour, 1s = 1 second
+
+#SPECIAL SETTINGS
+set-by-lore: false                          #Shows who set a bounty in the item-lore
+disable-items: false                        #Disables the Item support of the plugin completely
+allow-self-bounty: true                     #Allows players to set bounties on themselves
+
+#COOLDOWN
+cooldown-enabled: true                      #Enables a cooldown so your players cannot spam bounties
+global-cooldown: false                      #If enabled, no one can set a bounty during that time, if disabled, the cooldown locks individual players instead of the entire server
+cooldown-time: "10_s"                       #1m = 1 minute, 1h = 1 hour, 1s = 1 second
+
+#EVENT
+kill-without-bounty-penalty: "say &c[KILLER] you have killed an innocent!"   #Executes a command when a player without a bounty is killed. will be disabled when the command is empty. [KILLER] [KILLED]
