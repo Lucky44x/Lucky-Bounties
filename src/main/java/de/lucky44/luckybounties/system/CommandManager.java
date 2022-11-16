@@ -128,6 +128,9 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
+                    if(!(p.hasPermission("lb.remove") && p.hasPermission("lb.op")))
+                        return true;
+
                     if(args.length < 3)
                         return true;
 
@@ -181,7 +184,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     ret.add("set");
                 }
 
-                if(sender.hasPermission("lb.remove")){
+                if(sender.hasPermission("lb.remove") && sender.hasPermission("lb.op")){
                     ret.add("remove");
                 }
             }

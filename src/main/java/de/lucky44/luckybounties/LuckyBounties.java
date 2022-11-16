@@ -54,7 +54,7 @@ public class LuckyBounties extends JavaPlugin {
     @Override
     public void onEnable(){
         //region bstats
-        Metrics metrics = new Metrics(this, <PLUGINID>);
+        Metrics metrics = new Metrics(this, 12684);
         //endregion
 
         //region Instancing
@@ -122,7 +122,7 @@ public class LuckyBounties extends JavaPlugin {
         try{
             for(UUID key : bounties.keySet()){
 
-                getLogger().info("Saving " + bounties.get(key).size() + " bounties for " + key.toString());
+                //getLogger().info("Saving " + bounties.get(key).size() + " bounties for " + key.toString());
 
                 saveManager.SaveBounties(key, bounties.get(key));
             }
