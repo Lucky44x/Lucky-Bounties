@@ -55,20 +55,6 @@ public class GUI_SetBounty extends GUI {
                 ItemStack bountyPayment = v.getItem(4);
                 LuckyBounties.I.addBounty(target.getUniqueId(), new bounty(bountyPayment), user.getUniqueId());
 
-                if(CONFIG.getBool("bounty-set-global")){
-                    Bukkit.getServer().broadcastMessage(LANG.getText("bounty-set-global")
-                            .replace("[PLAYERNAME]", user.getName())
-                            .replace("[TARGET]", target.getName())
-                            .replace("[AMOUNT]", ""+v.getItem(4).getAmount())
-                            .replace("[ITEM]", ""+v.getItem(4).getType().name()));
-                }
-                else{
-                    user.sendMessage(LANG.getText("bounty-set")
-                            .replace("[TARGET]", target.getName())
-                            .replace("[AMOUNT]", ""+v.getItem(4).getAmount())
-                            .replace("[ITEM]", ""+v.getItem(4).getType().name()));
-                }
-
                 CooldownManager.I.setBounty(target, user);
 
                 GUI_BountiesList bountiesList = new GUI_BountiesList(target, 0);

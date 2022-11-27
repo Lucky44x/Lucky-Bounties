@@ -1,6 +1,7 @@
 package de.lucky44.luckybounties;
 
 import de.lucky44.gui.GUIManager;
+import de.lucky44.luckybounties.chat.ChatManager;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.data.loadManager;
 import de.lucky44.luckybounties.files.data.saveManager;
@@ -31,13 +32,13 @@ public class LuckyBounties extends JavaPlugin {
 
     public static LuckyBounties I;
     public GUIManager guiManager;
+    public ChatManager chatManager;
     public CooldownManager cooldownManager;
     public Map<UUID, List<bounty>> bounties = new HashMap<>();
     public Map<UUID, playerData> players = new HashMap<>();
 
     //For saving the setter UUID in the bounty Items (gets removed from items when dropped)
     public NamespacedKey dataKey;
-
 
     //region stats
     public static playerData mostWorth;
@@ -107,6 +108,8 @@ public class LuckyBounties extends JavaPlugin {
         getMostCollected();
 
         dataKey = new NamespacedKey(this, "lbData");
+
+        chatManager = new ChatManager();
 
         getLogger().info("Plugin enabled");
     }
