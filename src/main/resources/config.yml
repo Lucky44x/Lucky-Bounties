@@ -3,7 +3,7 @@
 #     So if your Server runs on a higher tick rate, the interval will actually be shorter.
 
 #Do not touch
-version: "1.3"
+version: "1.4"
 
 #==MESSAGES
 #GLOBAL    When these are false, the plugin will default to local messages (Just the player performing the action)
@@ -33,6 +33,9 @@ allow-self-bounty: true                     #Allows players to set bounties on t
 cooldown-enabled: true                      #Enables a cooldown so your players cannot spam bounties
 global-cooldown: false                      #If enabled, no one can set a bounty during that time, if disabled, the cooldown locks individual players instead of the entire server
 cooldown-time: "10_s"                       #1m = 1 minute, 1h = 1 hour, 1s = 1 second
+
+#OPERATOR SETTINGS
+op-ignore-cooldown: false                   #Should Operators ignore the cooldown
 
 #EVENT
 kill-without-bounty-penalty: "say &c[KILLER] you have killed an innocent!"   #Executes a command when a player without a bounty is killed. will be disabled when the command is empty. [KILLER] [KILLED]

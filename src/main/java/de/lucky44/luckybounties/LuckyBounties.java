@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class LuckyBounties extends JavaPlugin {
-    public static final String CONFIG_VERSION = "1.3";
+    public static final String CONFIG_VERSION = "1.4";
     public static final String LANG_VERSION = "1.5";
 
     public static LuckyBounties I;
@@ -186,6 +186,21 @@ public class LuckyBounties extends JavaPlugin {
             else
                 ecoBounty.moneyPayment += toAdd.moneyPayment;
 
+            if(CONFIG.getBool("bounty-set-global")){
+                Bukkit.broadcastMessage(LANG.getText("eco-bounty-set-global")
+                        .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : Bukkit.getPlayer(setter).getName())
+                        .replace("[AMOUNT]", ""+toAdd.moneyPayment)
+                        .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
+                        .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
+            }
+            else{
+                if(setter != null)
+                    Bukkit.getPlayer(setter).sendMessage(LANG.getText("eco-bounty-set")
+                        .replace("[AMOUNT]", ""+ toAdd.moneyPayment)
+                        .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
+                        .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
+            }
+
             ecoBounty = getEcoBounty(id);
 
             if(ecoBounty == null)
@@ -202,6 +217,20 @@ public class LuckyBounties extends JavaPlugin {
             dataContainer.set(dataKey, PersistentDataType.STRING, setter != null ? setter.toString() : "CONSOLE");
             toAdd.payment.setItemMeta(meta);
             bounties.computeIfAbsent(id, k -> new ArrayList<>()).add(toAdd);
+            if(CONFIG.getBool("bounty-set-global")){
+                Bukkit.broadcastMessage(LANG.getText("bounty-set-global")
+                        .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : Bukkit.getPlayer(setter).getName())
+                        .replace("[AMOUNT]", ""+toAdd.payment.getAmount())
+                        .replace("[ITEM]", toAdd.payment.getType().name())
+                        .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
+            }
+            else{
+                if(setter != null)
+                    Bukkit.getPlayer(setter).sendMessage(LANG.getText("bounty-set")
+                            .replace("[AMOUNT]", ""+ toAdd.payment.getAmount())
+                            .replace("[ITEM]", toAdd.payment.getType().name())
+                            .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
+            }
         }
 
         fetchPlayer(id).onGetSetOn();

@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.timers;
 
+import de.lucky44.luckybounties.files.config.CONFIG;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -37,6 +38,9 @@ public class CooldownManager {
     public boolean isAllowedToSet(Player target, Player setter){
 
         if(!enabled)
+            return true;
+
+        if(setter.hasPermission("lb.op") && CONFIG.getBool("op-ignore-cooldown"))
             return true;
 
         long lastTime = 0;

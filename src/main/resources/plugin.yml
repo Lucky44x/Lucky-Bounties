@@ -1,5 +1,5 @@
 name: LuckyBounties
-version: 2.5
+version: 2.5.1
 main: de.lucky44.luckybounties.LuckyBounties
 api-version: 1.14
 load: POSTWORLD

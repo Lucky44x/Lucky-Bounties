@@ -10,6 +10,8 @@ public class RankingNotification {
     public static void run(){
         playerData maxBounties = LuckyBounties.mostWorth;
 
+        Bukkit.getLogger().info("Running rankingmessage");
+
         if(maxBounties != null){
             Bukkit.broadcastMessage(LANG.getText("ranking-message")
                     .replace("[PLAYERNAME]", maxBounties.playerName)

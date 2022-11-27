@@ -4,6 +4,7 @@ import de.lucky44.api.luckybounties.events.EcoBountySetEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
+import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
@@ -50,21 +51,7 @@ public class GUI_EcoSetBounty {
 
                         bounty toSet = new bounty(amount);
                         LuckyBounties.I.addBounty(target.getUniqueId(), toSet, user.getUniqueId());
-
-                        if(CONFIG.getBool("bounty-set-global")){
-                            Bukkit.broadcastMessage(LANG.getText("eco-bounty-set-global")
-                                    .replace("[PLAYERNAME]", user.getName())
-                                    .replace("[AMOUNT]", ""+amount)
-                                    .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
-                                    .replace("[TARGET]", target.getName()));
-                        }
-                        else{
-                            user.sendMessage(LANG.getText("eco-bounty-set")
-                                    .replace("[AMOUNT]", ""+amount)
-                                    .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
-                                    .replace("[TARGET]", target.getName()));
-                        }
-
+                        CooldownManager.I.setBounty(target, user);
                         return AnvilGUI.Response.close();
                     }
                     else{

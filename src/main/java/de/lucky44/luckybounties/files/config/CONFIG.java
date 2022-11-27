@@ -28,7 +28,7 @@ public class CONFIG {
         rankingMessageDelay = toTickTime(getString("ranking-message-interval"));
 
         boolean oldSetting = rankingMessageEnabled;
-        rankingMessageEnabled = getBool("ranking-message-enabled");
+        rankingMessageEnabled = getBool("send-ranking-message");
         if(!oldSetting && rankingMessageEnabled){
             Bukkit.getScheduler().runTaskLaterAsynchronously(LuckyBounties.I, RankingNotification::run, CONFIG.rankingMessageDelay);
         }

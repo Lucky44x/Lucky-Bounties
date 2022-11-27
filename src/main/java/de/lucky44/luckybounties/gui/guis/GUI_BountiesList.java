@@ -107,13 +107,14 @@ public class GUI_BountiesList extends ChestGUI {
     }
 
     private void doSetItemCheck(int slot){
-        if(!user.hasPermission("lb.op")){
-            if(!user.hasPermission("lb.set")){
-                set(GUIItems.ErrorSlotItem(LANG.getText("missing-set-permission")), slot);
-            }
-            if(target.hasPermission("lb.exempt")){
-                set(GUIItems.ErrorSlotItem(LANG.getText("target-exempt").replace("[PLAYERNAME]", target.getName())), slot);
-            }
+        if(!user.hasPermission("lb.set")){
+            set(GUIItems.ErrorSlotItem(LANG.getText("missing-set-permission")), slot);
+        }
+        if(target.hasPermission("lb.exempt")){
+            set(GUIItems.ErrorSlotItem(LANG.getText("target-exempt").replace("[PLAYERNAME]", target.getName())), slot);
+        }
+
+        if(!(user.hasPermission("lb.op") && CONFIG.getBool("op-ignore-cooldown"))){
             if(!CooldownManager.I.isAllowedToSet(target, user)){
                 set(GUIItems.ErrorSlotItem(LANG.getText("cooldown-not-done").replace("[TARGET]", target.getName())), slot);
             }

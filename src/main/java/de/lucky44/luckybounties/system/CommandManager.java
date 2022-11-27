@@ -106,18 +106,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             return true;
 
                         LuckyBounties.I.Vault.withdraw(p, payment);
-
-                        if(!CONFIG.getBool("bounty-set-global"))
-                            p.sendMessage(LANG.getText("eco-bounty-set")
-                                .replace("[AMOUNT]", ""+payment)
-                                .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
-                                .replace("[TARGET]", target.getName()));
-                        else
-                            Bukkit.getServer().broadcastMessage(LANG.getText("eco-bounty-set-global")
-                                    .replace("[AMOUNT]", ""+payment)
-                                    .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
-                                    .replace("[PLAYERNAME]", p.getName())
-                                    .replace("[TARGET]", target.getName()));
                     }
                     else{
                         if(CONFIG.getBool("disable-items")){
