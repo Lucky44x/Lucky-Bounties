@@ -1,6 +1,8 @@
 package de.lucky44.luckybounties;
 
-import de.lucky44.gui.GUIManager;
+import de.lucky44.api.luckybounties.LuckyBountiesAPI;
+import de.lucky44.api.luckybounties.events.BountiesEvent;
+import de.lucky44.luckybounties.gui.core.GUIManager;
 import de.lucky44.luckybounties.chat.ChatManager;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.data.loadManager;
@@ -13,9 +15,11 @@ import de.lucky44.luckybounties.system.EventManager;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import de.lucky44.luckybounties.util.playerData;
-import org.bstats.Metrics;
+import de.lucky44.luckybounties.integrations.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -28,7 +32,7 @@ import java.util.*;
 
 public class LuckyBounties extends JavaPlugin {
     public static final String CONFIG_VERSION = "1.3";
-    public static final String LANG_VERSION = "1.4";
+    public static final String LANG_VERSION = "1.5";
 
     public static LuckyBounties I;
     public GUIManager guiManager;
@@ -50,6 +54,13 @@ public class LuckyBounties extends JavaPlugin {
     //region integrations
     public LuckyBountiesPAPIExtension papiExtension;
     public VaultIntegration Vault;
+    //endregion
+
+    //region API
+    public List<TabCompleter> completers = new ArrayList<>();
+    public List<CommandExecutor> executors = new ArrayList<>();
+
+    public List<LuckyBountiesAPI> apiConnections = new ArrayList<>();
     //endregion
 
     @Override
@@ -169,6 +180,7 @@ public class LuckyBounties extends JavaPlugin {
 
         if(toAdd.moneyPayment > 0){
             bounty ecoBounty = getEcoBounty(id);
+
             if(ecoBounty == null)
                 bounties.computeIfAbsent(id, k -> new ArrayList<>()).add(toAdd);
             else
@@ -187,7 +199,7 @@ public class LuckyBounties extends JavaPlugin {
         else{
             ItemMeta meta = toAdd.payment.getItemMeta();
             PersistentDataContainer dataContainer = meta.getPersistentDataContainer();
-            dataContainer.set(dataKey, PersistentDataType.STRING, setter.toString());
+            dataContainer.set(dataKey, PersistentDataType.STRING, setter != null ? setter.toString() : "CONSOLE");
             toAdd.payment.setItemMeta(meta);
             bounties.computeIfAbsent(id, k -> new ArrayList<>()).add(toAdd);
         }
@@ -196,7 +208,7 @@ public class LuckyBounties extends JavaPlugin {
     }
 
     public ItemStack cleanBountyItem(bounty b){
-        ItemStack toDrop = b.payment;
+        ItemStack toDrop = b.payment.clone();
         ItemMeta meta = toDrop.getItemMeta();
         PersistentDataContainer container = meta.getPersistentDataContainer();
         if(container.has(LuckyBounties.I.dataKey, PersistentDataType.STRING)){
@@ -214,6 +226,10 @@ public class LuckyBounties extends JavaPlugin {
     }
 
     public bounty getEcoBounty(UUID id){
+
+        if(Vault == null)
+            return null;
+
         for(bounty b : fetchBounties(id)){
             if(b.moneyPayment > 0)
                 return b;
@@ -229,9 +245,31 @@ public class LuckyBounties extends JavaPlugin {
     public  void removeBounty(UUID id, bounty b){
         bounties.computeIfAbsent(id, k -> new ArrayList<>()).remove(b);
     }
+
+    public void removeBounty(UUID target, float amount){
+        bounty ecoBounty = getEcoBounty(target);
+        if(ecoBounty == null)
+            return;
+        ecoBounty.moneyPayment -= amount;
+        ecoBounty.moneyPayment = ecoBounty.moneyPayment < 0 ? 0 : ecoBounty.moneyPayment;
+    }
     //endregion
 
     //region stats
+
+    public String getAllEcoBountyWorth() {
+        double completeAmount = 0;
+
+        for(UUID player : bounties.keySet()){
+            bounty ecoBounty = getEcoBounty(player);
+            if(ecoBounty == null)
+                continue;
+            completeAmount += ecoBounty.moneyPayment;
+        }
+
+        return ""+completeAmount;
+    }
+
     public void getHighestEcoBounty(){
 
         ecoMostWorth = null;
@@ -278,6 +316,14 @@ public class LuckyBounties extends JavaPlugin {
     //region player management
     public playerData fetchPlayer(UUID uuid){
         return players.computeIfAbsent(uuid, k -> new playerData(Objects.requireNonNull(Bukkit.getPlayer(uuid)).getName(), uuid));
+    }
+    //endregion
+
+    //region API-connection
+    public void callEvent(BountiesEvent e){
+        for(LuckyBountiesAPI api : apiConnections){
+            api.callEvent(e);
+        }
     }
     //endregion
 }

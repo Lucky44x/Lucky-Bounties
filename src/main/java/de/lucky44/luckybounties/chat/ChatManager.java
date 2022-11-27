@@ -18,6 +18,7 @@ public class ChatManager {
         I = this;
     }
 
+    /*
     public void bountySet(Player target, Player setter, ItemStack item){
 
         Item chatItem = new Item();
@@ -37,4 +38,5 @@ public class ChatManager {
                     .replace("[ITEM]", ""+item.getType().name()));
         }
     }
+    */
 }
