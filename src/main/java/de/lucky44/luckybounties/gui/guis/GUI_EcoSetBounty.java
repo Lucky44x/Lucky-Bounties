@@ -26,8 +26,8 @@ public class GUI_EcoSetBounty {
 
         new AnvilGUI.Builder()
                 .onClose(player -> {
-                    GUI_BountiesList BountiesGUI = new GUI_BountiesList(target, 0);
-                    BountiesGUI.open(user);
+                    //GUI_BountiesList BountiesGUI = new GUI_BountiesList(target, 0);
+                    //BountiesGUI.open(user);
                 })
                 .onComplete((player, text) -> {
                     if(text.matches("[-+]?[0-9]*\\.?[0-9]+")){

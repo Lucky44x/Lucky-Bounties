@@ -88,6 +88,15 @@ public class GUI_BountiesList extends ChestGUI {
         if(hasLast)
             set(GUIItems.BackItem(), 52);
 
+        if(CONFIG.getBool("disable-items") && CONFIG.getBool("vault-integration")){
+
+            if(bounties.length == 0)
+                return;
+
+            set(GUIItems.BountyItem(bounties[0]), 31);
+            return;
+        }
+
         int offset = 27 * page;
         for(int slot = 18; slot < 45; slot++){
             if(slot-18 + offset >= bounties.length)
@@ -143,6 +152,10 @@ public class GUI_BountiesList extends ChestGUI {
 
         //Bounty Items Clicked
         if(slot > 17 && slot < 45){
+
+            if(CONFIG.getBool("disable-items") && CONFIG.getBool("vault-integration")){
+                return;
+            }
 
             if(!user.hasPermission("lb.remove"))
                 return;
