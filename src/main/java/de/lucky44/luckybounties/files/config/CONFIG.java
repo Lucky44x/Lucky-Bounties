@@ -89,6 +89,7 @@ public class CONFIG {
     public static String getString(String path){
         return config.getString(path);
     }
+    public static int getInt(String path) {return config.getInt(path);}
 
     public static long toTickTime(String input){
         long out = 0;

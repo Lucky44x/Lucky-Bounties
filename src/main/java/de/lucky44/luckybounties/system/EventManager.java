@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.system;
 
+import de.lucky44.api.luckybounties.events.BountyCollectEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
@@ -10,10 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
@@ -31,7 +28,14 @@ public class EventManager implements Listener {
             return;
 
         List<bounty> bounties = LuckyBounties.I.fetchBounties(killed.getUniqueId());
+
         if(bounties.size() > 0){
+
+            BountyCollectEvent event = new BountyCollectEvent(killer, killed, bounties.toArray(bounty[]::new));
+            LuckyBounties.I.callEvent(event);
+            if(event.isCancelled())
+                return;
+
             if(CONFIG.getBool("bounty-take-global")){
                 e.setDeathMessage(LANG.getText("bounty-take-global")
                         .replace("[PLAYERNAME]", killer.getName())
@@ -52,8 +56,10 @@ public class EventManager implements Listener {
                 killer.getWorld().dropItem(killed.getLocation(), LuckyBounties.I.cleanBountyItem(b));
             }
 
+            LuckyBounties.I.callEvent(new BountyCollectEvent(killer, killed, bounties.toArray(bounty[]::new)));
             LuckyBounties.I.clearBounties(killed.getUniqueId());
             LuckyBounties.I.fetchPlayer(killer.getUniqueId()).onCollect();
+
         }
         else{
             if(CONFIG.getString("kill-without-bounty-penalty").isEmpty())

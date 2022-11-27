@@ -11,6 +11,10 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class LANG {
 
@@ -51,5 +55,20 @@ public class LANG {
             return ChatColor.RED + "ERROR: NO PARAMETER FOR " + identifier;
         else
             return ChatColor.translateAlternateColorCodes('&', langFileConfig.getString(identifier));
+    }
+
+    public static List<String> getStringList(String identifier){
+        if(langFile == null || langFileConfig == null)
+            return Stream.of(ChatColor.RED + "ERROR: NO LANG FILE LOADED").toList();
+
+        if(langFileConfig.getStringList(identifier).size() == 0)
+            return Stream.of(ChatColor.RED + "ERROR: NO PARAMETER FOR " + identifier).toList();
+
+        List<String> ret = new ArrayList<>();
+        for(String s : langFileConfig.getStringList(identifier)){
+            ret.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+
+        return ret;
     }
 }

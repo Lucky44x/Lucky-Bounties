@@ -3,25 +3,32 @@
 #Only the parts which have [PLAYERNAME] already in them, will replace it, so changing the cancel-button to '[PLAYERNAME]cancel' will not work
 
 #Do not touch:
-version: "1.4"
+version: "1.5"
 
 #GUI - Titles
 main-gui-title: "&lBOUNTIES"
 player-gui-title: "&l[PLAYERNAME]'s Bounties"
 set-gui-title: "&lSet bounty on [PLAYERNAME]"
 eco-bounty-name: "&6[AMOUNT][SYMBOL]"
+console-setter-name: "SYSTEM"                                                                                           # The "Name" the setter gets on a console-set bounty (Only use in the API as of now. Console set bounty will be added)
+
+#GUI - ItemLore
+set-eco-item-lore:
+  - "&6Input the amount you want to set above"
+  - "&6And press this Item to confirm your Input"
 head-lore-format: "&8[AMOUNT]x [TYPE]"
 head-lore-eco-format: "&8[AMOUNT][SYMBOL]"
 head-lore-overflow: "&8..."
 item-lore-set-by: "&8&l Set by [PLAYERNAME]"
-unknown-setter: "UNKNOWN"
 
 #GUI - Buttons
+unknown-setter: "UNKNOWN"
 confirm-button: "&aConfirm"
 cancel-button: "&cCancel"
 next-button: "Next Page"
 back-button: "Back"
 set-button: "Set Bounty"
+set-eco-button: "&6Set Eco-Bounty"
 clear-button: "Clear Bounties"
 
 #Messages - Errors
@@ -31,12 +38,13 @@ target-exempt: "&c[PLAYERNAME] is exempt from bounties"
 economy-disabled: "&cEconomy isn't enabled"
 player-not-found: "&c[PLAYERNAME] was not found or isn't online"
 not-holding-anything:  "&cYou are not holding anything"
-cannot-afford: "&c You cannot afford to set a bounty of [AMOUNT][SYMBOL]"
+cannot-afford: "&cCannot afford [AMOUNT][SYMBOL]"
 bounty-below-zero: "&cThe payment for a bounty has to be above 0"
 cooldown-not-done: "&cYou can't already set another bounty on [TARGET]"
 items-disabled: "&cItems are disabled"
 self-bounty-error: "&cYou cannot set a bounty on yourself"
 inventory-full: "&cYour Inventory is full"
+not-a-number: "Not a number"
 
 #Messages - Notifications
 reload-complete: "&aReloaded config"
@@ -44,7 +52,7 @@ bounty-set: "&aSet bounty of [AMOUNT]x [ITEM] on [TARGET]"
 bounty-take: "&aYou have taken [TARGET]'s bounties"
 ranking-message: "&l[PLAYERNAME] is wanted for [AMOUNT] bounties. &cHunt them down to collect the reward!"
 removed-bounty: "&aRemoved bounty from [PLAYERNAME]"
-eco-bounty-set: "&aSet bounty of [AMOUNT][SYMBOL]"
+eco-bounty-set: "&aSet bounty of [AMOUNT][SYMBOL] on [TARGET]"
 
 #Messages - GLOBAL - Notifications
 bounty-set-global: "[PLAYERNAME] set a bounty of [AMOUNT]x [ITEM] on [TARGET]"

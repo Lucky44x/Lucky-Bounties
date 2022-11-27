@@ -1,9 +1,12 @@
 package de.lucky44.luckybounties.system;
 
+import de.lucky44.api.luckybounties.events.BountySetEvent;
+import de.lucky44.api.luckybounties.events.EcoBountyRemoveEvent;
+import de.lucky44.api.luckybounties.events.EcoBountySetEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
-import de.lucky44.luckybounties.guis.GUI_PlayerList;
+import de.lucky44.luckybounties.gui.guis.GUI_PlayerList;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import org.bukkit.Bukkit;
@@ -28,6 +31,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             p = (Player)sender;
         else
             return true;
+
+        if(LuckyBounties.I.executors.size() > 0){
+            for(CommandExecutor e : LuckyBounties.I.executors){
+                e.onCommand(sender, cmd, s, args);
+            }
+        }
 
         if(cmd.getName().equals("bounties")){
 
@@ -90,12 +99,19 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                         }
 
                         b = new bounty(payment);
+
+                        EcoBountySetEvent event = new EcoBountySetEvent(p, target, payment);
+                        LuckyBounties.I.callEvent(event);
+                        if(event.isCancelled())
+                            return true;
+
                         LuckyBounties.I.Vault.withdraw(p, payment);
 
                         if(!CONFIG.getBool("bounty-set-global"))
                             p.sendMessage(LANG.getText("eco-bounty-set")
                                 .replace("[AMOUNT]", ""+payment)
-                                .replace("[SYMBOL]", CONFIG.getString("currency-symbol")));
+                                .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
+                                .replace("[TARGET]", target.getName()));
                         else
                             Bukkit.getServer().broadcastMessage(LANG.getText("eco-bounty-set-global")
                                     .replace("[AMOUNT]", ""+payment)
@@ -116,6 +132,12 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                         }
 
                         b = new bounty(holding);
+
+                        BountySetEvent event = new BountySetEvent(p, target, b);
+                        LuckyBounties.I.callEvent(event);
+                        if(event.isCancelled())
+                            return true;
+
                         p.getInventory().remove(p.getInventory().getItemInMainHand());
                     }
 
@@ -146,6 +168,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                     if(ecoBounty == null)
                         return true;
 
+                    EcoBountyRemoveEvent event = new EcoBountyRemoveEvent(p, target, amount);
+                    LuckyBounties.I.callEvent(event);
+                    if(event.isCancelled())
+                        return true;
+
                     ecoBounty.moneyPayment -= amount;
                     if(ecoBounty.moneyPayment <= 0){
                         LuckyBounties.I.removeBounty(target.getUniqueId(), ecoBounty);
@@ -169,6 +196,15 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
         if(sender == null)
             return ret;
+
+        if(LuckyBounties.I.completers.size() > 0){
+            for(TabCompleter t : LuckyBounties.I.completers){
+                List<String> returnFromAPI = t.onTabComplete(sender, cmd, s, args);
+                if(returnFromAPI == null)
+                    continue;
+                ret.addAll(returnFromAPI);
+            }
+        }
 
         if(!cmd.getName().equals("bounties"))
             return ret;
@@ -211,6 +247,6 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
 
-        return ret;
+        return ret.stream().filter(f -> f.startsWith(args[args.length-1])).toList();
     }
 }

@@ -1,7 +1,8 @@
 name: LuckyBounties
-version: 2.4.1
+version: 2.5
 main: de.lucky44.luckybounties.LuckyBounties
 api-version: 1.14
+load: POSTWORLD
 
 softdepend: [PlaceholderAPI, Vault]
 
