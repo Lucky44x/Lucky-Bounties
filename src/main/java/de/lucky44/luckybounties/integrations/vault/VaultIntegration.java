@@ -12,35 +12,48 @@ public class VaultIntegration {
 
     public static VaultIntegration I;
 
-    private Economy econ;
+    private Economy econ = null;
 
     public VaultIntegration(){
-        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
-        if(rsp == null){
-            errorNotRegistered();
-            return;
-        }
-
-        econ = rsp.getProvider();
+        checkEconomy();
     }
 
     private void errorNotRegistered(){
         Bukkit.getLogger().info(ChatColor.RED + "Could not find a registered vault service provider");
     }
 
+    private boolean checkEconomy(){
+        if(econ != null)
+            return true;
+
+        RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
+        if(rsp == null){
+            errorNotRegistered();
+            return false;
+        }
+        econ = rsp.getProvider();
+        return true;
+    }
+
     public String getSymbol(){
-        return CONFIG.getString("currency-symbol");
+        if(checkEconomy())
+            return CONFIG.getString("currency-symbol");
+        return "";
     }
 
     public double getBalance(Player p){
-        return econ.getBalance(p);
+        if(checkEconomy())
+            return econ.getBalance(p);
+        return 0;
     }
 
     public void withdraw(Player p, double d){
-        econ.withdrawPlayer(p, d);
+        if(checkEconomy())
+            econ.withdrawPlayer(p, d);
     }
 
     public void add(Player p, double d){
-        econ.depositPlayer(p, d);
+        if(checkEconomy())
+            econ.depositPlayer(p, d);
     }
 }

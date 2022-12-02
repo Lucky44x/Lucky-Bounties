@@ -1,14 +1,17 @@
 package de.lucky44.luckybounties.files.lang;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import de.lucky44.luckybounties.LuckyBounties;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Array;
@@ -21,6 +24,16 @@ public class LANG {
     private static File langFile;
     private static FileConfiguration langFileConfig;
 
+    public static void updateLang(JavaPlugin instance){
+        saveDefaultLang(instance);
+        File configFile = new File(instance.getDataFolder(), "lang.yml");
+        try {
+            ConfigUpdater.update(instance, "lang.yml", configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void loadLangFile(Plugin instance){
         if(langFile == null){
             langFile = new File(instance.getDataFolder(), "lang.yml");
@@ -32,10 +45,6 @@ public class LANG {
         if(defaultStream != null){
             YamlConfiguration defaultLang = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultStream));
             langFileConfig.setDefaults(defaultLang);
-        }
-
-        if(!LuckyBounties.LANG_VERSION.equals(getText("version"))){
-            Bukkit.getLogger().warning("[LuckyBounties] There is a new LANG version available. Please update by deleting your old lang file (you can just copy the contents into a temporary file and paste them back into the new file)");
         }
     }
 

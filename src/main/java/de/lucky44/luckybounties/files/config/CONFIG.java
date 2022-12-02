@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.files.config;
 
+import com.tchristofferson.configupdater.ConfigUpdater;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.integrations.papi.LuckyBountiesPAPIExtension;
 import de.lucky44.luckybounties.integrations.vault.VaultIntegration;
@@ -10,6 +11,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.io.IOException;
+
 public class CONFIG {
 
     static FileConfiguration config;
@@ -18,12 +22,19 @@ public class CONFIG {
     public static long rankingMessageDelay;
     public static boolean rankingMessageEnabled;
 
-    public static void loadConfig(){
-        config = instance.getConfig();
-
-        if(!LuckyBounties.CONFIG_VERSION.equals(getString("version"))){
-            Bukkit.getLogger().warning("[LuckyBounties] There is a new CONFIG version available. Please update by deleting your old config file (you can just copy the contents into a temporary file and paste them back into the new file)");
+    public static void updateConfig(){
+        saveDefaultConfig();
+        File configFile = new File(instance.getDataFolder(), "config.yml");
+        try {
+            ConfigUpdater.update(instance, "config.yml", configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public static void loadConfig(){
+        saveDefaultConfig();
+        config = instance.getConfig();
 
         rankingMessageDelay = toTickTime(getString("ranking-message-interval"));
 

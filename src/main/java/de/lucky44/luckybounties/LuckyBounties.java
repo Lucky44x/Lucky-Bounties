@@ -2,6 +2,7 @@ package de.lucky44.luckybounties;
 
 import de.lucky44.api.luckybounties.LuckyBountiesAPI;
 import de.lucky44.api.luckybounties.events.BountiesEvent;
+import de.lucky44.luckybounties.chat.Versions.*;
 import de.lucky44.luckybounties.gui.core.GUIManager;
 import de.lucky44.luckybounties.chat.ChatManager;
 import de.lucky44.luckybounties.files.config.CONFIG;
@@ -20,8 +21,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,8 +33,6 @@ import java.io.IOException;
 import java.util.*;
 
 public class LuckyBounties extends JavaPlugin {
-    public static final String CONFIG_VERSION = "1.4";
-    public static final String LANG_VERSION = "1.5";
 
     public static LuckyBounties I;
     public GUIManager guiManager;
@@ -120,7 +120,19 @@ public class LuckyBounties extends JavaPlugin {
 
         dataKey = new NamespacedKey(this, "lbData");
 
-        chatManager = new ChatManager();
+        chatManager = new ChatManager_Normal();
+
+        try{
+            String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+
+            if("v1_19_R1".equalsIgnoreCase(version))
+                chatManager = new ChatManager1_19();
+            else if("v1_18_R2".equalsIgnoreCase(version))
+                chatManager = new ChatManager1_18_2();
+        }
+        catch(ArrayIndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
 
         getLogger().info("Plugin enabled");
     }
@@ -158,9 +170,11 @@ public class LuckyBounties extends JavaPlugin {
 
     private void loadConfigData(){
         CONFIG.instance = this;
+        CONFIG.updateConfig();
         CONFIG.saveDefaultConfig();
         CONFIG.loadConfig();
         LANG.saveDefaultLang(this);
+        LANG.updateLang(this);
         LANG.loadLangFile(this);
     }
 
@@ -218,11 +232,7 @@ public class LuckyBounties extends JavaPlugin {
             toAdd.payment.setItemMeta(meta);
             bounties.computeIfAbsent(id, k -> new ArrayList<>()).add(toAdd);
             if(CONFIG.getBool("bounty-set-global")){
-                Bukkit.broadcastMessage(LANG.getText("bounty-set-global")
-                        .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : Bukkit.getPlayer(setter).getName())
-                        .replace("[AMOUNT]", ""+toAdd.payment.getAmount())
-                        .replace("[ITEM]", toAdd.payment.getType().name())
-                        .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
+                chatManager.bountySet(Bukkit.getPlayer(setter), Bukkit.getPlayer(id), toAdd.payment);
             }
             else{
                 if(setter != null)
@@ -311,6 +321,46 @@ public class LuckyBounties extends JavaPlugin {
             if(ecoMostWorth == null || ecoMostWorth.ecoWorth < pD.ecoWorth)
                 ecoMostWorth = pD;
         }
+    }
+
+    public Player getHighestEcoBountyOnline(){
+        if(getServer().getOnlinePlayers().size() == 0)
+            return null;
+
+        Player highestEco = null;
+        float highestEcoAmount = -1;
+        for(Player p : getServer().getOnlinePlayers()){
+            float playerBounty = getEcoBounty(p.getUniqueId()).moneyPayment;
+            if(playerBounty > highestEcoAmount){
+                highestEco = p;
+                highestEcoAmount = playerBounty;
+            }
+        }
+
+        if(highestEcoAmount == 0)
+            return null;
+
+        return highestEco;
+    }
+
+    public Player getHighestBountyOnline(){
+        if(getServer().getOnlinePlayers().size() == 0)
+            return null;
+
+        Player highestBounty = null;
+        int highestBountyAmount = -1;
+        for(Player p : getServer().getOnlinePlayers()){
+            int playerBounty = fetchPlayer(p.getUniqueId()).worth;
+            if(playerBounty > highestBountyAmount){
+                highestBounty = p;
+                highestBountyAmount = playerBounty;
+            }
+        }
+
+        if(highestBountyAmount == 0)
+            return null;
+
+        return highestBounty;
     }
 
     public void getHighestBountyCount(){

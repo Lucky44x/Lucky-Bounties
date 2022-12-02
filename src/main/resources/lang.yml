@@ -2,9 +2,6 @@
 #When the reload command is entered, this file will get reloaded alongside the config
 #Only the parts which have [PLAYERNAME] already in them, will replace it, so changing the cancel-button to '[PLAYERNAME]cancel' will not work
 
-#Do not touch:
-version: "1.5"
-
 #GUI - Titles
 main-gui-title: "&lBOUNTIES"
 player-gui-title: "&l[PLAYERNAME]'s Bounties"
@@ -51,10 +48,12 @@ reload-complete: "&aReloaded config"
 bounty-set: "&aSet bounty of [AMOUNT]x [ITEM] on [TARGET]"
 bounty-take: "&aYou have taken [TARGET]'s bounties"
 ranking-message: "&l[PLAYERNAME] is wanted for [AMOUNT] bounties. &cHunt them down to collect the reward!"
+ranking-message-eco: "&l[PLAYERNAME] is wanted for [AMOUNT][SYMBOL]. &cHunt them down to collect the reward!"
 removed-bounty: "&aRemoved bounty from [PLAYERNAME]"
 eco-bounty-set: "&aSet bounty of [AMOUNT][SYMBOL] on [TARGET]"
 
 #Messages - GLOBAL - Notifications
-bounty-set-global: "[PLAYERNAME] set a bounty of [AMOUNT]x [ITEM] on [TARGET]"
+bounty-set-global: "[PLAYERNAME] set a bounty of &b[AMOUNT]x [ITEM]&r on [TARGET]"
 eco-bounty-set-global: "[PLAYERNAME] set a bounty of [AMOUNT][SYMBOL] on [TARGET]"
 bounty-take-global: "[PLAYERNAME] has taken [TARGET]'s bounties"
+eco-bounty-take-global: "[PLAYERNAME] has claimed [TARGET]'S $[AMOUNT] BOUNTY"

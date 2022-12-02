@@ -2,13 +2,12 @@
 #     The time setting, 'ranking-message-interval' is using the default tps of 20 ticks to operate
 #     So if your Server runs on a higher tick rate, the interval will actually be shorter.
 
-#Do not touch
-version: "1.4"
-
 #==MESSAGES
 #GLOBAL    When these are false, the plugin will default to local messages (Just the player performing the action)
 bounty-set-global: true                     #Sends a notification for everyone to see when a bounty is set              (LANG: bounty-set-global)
 bounty-take-global: true                    #Sends a notification for everyone when a player with bounties is killed    (LANG: bounty-take-global)
+bounty-take-eco: false                      #Toggles the death-message to eco mode (LANG: eco-bounty-take)
+take-message-overrides-death-message: true  #When false, instead of overriding minecrafts death message it will send a normal server message
 
 #==INTEGRATIONS
 papi-integration: false                     #Activates the PlaceholderAPI integration, so you can use placeholders
@@ -22,6 +21,7 @@ currency-symbol: "$"
 #==ETXRAS
 #RANKING SYSTEM             (LANG: Ranking message)
 send-ranking-message: true                  #Every {ranking_message_interval} h/m/s a public notification, announcing the player with the most bounties will be sent
+ranking-message-eco: false                  #Toggles the ranking message system from Item bounties to Eco bounties
 ranking-message-interval: "1_h:1_m:1_s"     # 1m = 1 minute, 1h = 1 hour, 1s = 1 second
 
 #SPECIAL SETTINGS

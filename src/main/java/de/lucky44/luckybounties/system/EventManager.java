@@ -37,10 +37,39 @@ public class EventManager implements Listener {
                 return;
 
             if(CONFIG.getBool("bounty-take-global")){
-                e.setDeathMessage(LANG.getText("bounty-take-global")
-                        .replace("[PLAYERNAME]", killer.getName())
-                        .replace("[TARGET]", killed.getName())
-                );
+
+                bounty ecoBounty = LuckyBounties.I.getEcoBounty(killed.getUniqueId());
+
+                if(CONFIG.getBool("bounty-take-eco") && ecoBounty != null){
+
+                    if(CONFIG.getBool("take-message-overrides-death-message")){
+                        e.setDeathMessage(LANG.getText("eco-bounty-take-global")
+                                .replace("[PLAYERNAME]", killer.getName())
+                                .replace("[TARGET]", killed.getName())
+                                .replace("[AMOUNT]", ""+ecoBounty.moneyPayment));
+                    }
+                    else{
+                        Bukkit.broadcastMessage(LANG.getText("eco-bounty-take-global")
+                                .replace("[PLAYERNAME]", killer.getName())
+                                .replace("[TARGET]", killed.getName())
+                                .replace("[AMOUNT]", ""+ecoBounty.moneyPayment)
+                        );
+                    }
+                }
+                else{
+
+                    if(CONFIG.getBool("take-message-overrides-death-message")){
+                        e.setDeathMessage(LANG.getText("bounty-take-global")
+                                .replace("[PLAYERNAME]", killer.getName())
+                                .replace("[TARGET]", killed.getName()));
+                    }
+                    else{
+                        Bukkit.broadcastMessage(LANG.getText("bounty-take-global")
+                                .replace("[PLAYERNAME]", killer.getName())
+                                .replace("[TARGET]", killed.getName())
+                        );
+                    }
+                }
             }
             else{
                 killer.sendMessage(LANG.getText("bounty-take").replace("[TARGET]", killed.getName()));
