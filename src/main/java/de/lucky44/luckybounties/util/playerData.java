@@ -42,6 +42,16 @@ public class playerData {
         LuckyBounties.I.getHighestBountyCount();
     }
 
+    public void onRemoved(){
+        worth--;
+        lastUpdateWor = Calendar.getInstance().getTimeInMillis();
+
+        if(LuckyBounties.mostWorth != this)
+            return;
+
+        LuckyBounties.I.getHighestBountyCount();
+    }
+
     public void onDeath(){
         worth = 0;
         ecoWorth = 0;

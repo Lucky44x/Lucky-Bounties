@@ -51,7 +51,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- this is a horrible way to cheat maven into letting me use 2 versions, but hey, it works        -->
+        <!-- this is a horrible way to cheat maven into letting me use 2 versions, but hey, it works -->
         <dependency>
             <groupId>org.spigotmc.</groupId>
             <artifactId>spigot</artifactId>
@@ -68,7 +68,7 @@
         <dependency>
             <groupId>net.wesjd</groupId>
             <artifactId>anvilgui</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.6.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>

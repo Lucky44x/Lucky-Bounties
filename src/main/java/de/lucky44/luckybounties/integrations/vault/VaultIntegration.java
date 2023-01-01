@@ -5,7 +5,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
 public class VaultIntegration {
@@ -35,9 +34,9 @@ public class VaultIntegration {
         return true;
     }
 
-    public String getSymbol(){
+    public String format(double num){
         if(checkEconomy())
-            return CONFIG.getString("currency-symbol");
+            return econ.format(num);
         return "";
     }
 

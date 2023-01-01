@@ -1,7 +1,6 @@
 package de.lucky44.api.luckybounties;
 
 import de.lucky44.api.luckybounties.events.BountiesEvent;
-import de.lucky44.api.luckybounties.events.BountiesEventHandler;
 import de.lucky44.api.luckybounties.util.BountyData;
 import de.lucky44.api.luckybounties.util.EcoBountyData;
 import de.lucky44.luckybounties.LuckyBounties;
@@ -19,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class LuckyBountiesAPI {
     private JavaPlugin pluginInstance;
@@ -34,7 +32,7 @@ public class LuckyBountiesAPI {
             if(pM.isPluginEnabled("LuckyBounties")){
                 bountiesInstance = (LuckyBounties) pM.getPlugin("LuckyBounties");
                 if(bountiesInstance != null){
-                    bountiesInstance.apiConnections.add(this);
+                    //bountiesInstance.apiConnections.add(this);
                     connected = true;
                 }
             }
@@ -160,10 +158,7 @@ public class LuckyBountiesAPI {
     //endregion
 
     //region Events
-    /**
-     * register all Methods inside the listener class which are annotated with BountiesEventHandler
-     * @param listener inherits the org.bukkit.events.Listener class
-     */
+    /*
     public void registerEvents(Listener listener){
 
         //Bukkit.getLogger().info("checking class: " + listener.getClass().getName());
@@ -191,10 +186,6 @@ public class LuckyBountiesAPI {
         }
     }
 
-    /**
-     * deregister all Methods inside the listener class which are annotated with BountiesEventHandler
-     * @param listener inherits the org.bukkit.events.Listener class
-     */
     public void deregisterEvents(Listener listener){
         for(Method m : listener.getClass().getMethods()){
             if(!m.isAnnotationPresent(BountiesEventHandler.class))
@@ -213,10 +204,6 @@ public class LuckyBountiesAPI {
         }
     }
 
-    /**
-     * Meant to be called by LuckyBounties internal logic. DO NOT CALL THIS METHOD
-     * @param eventInfo the event
-     */
     public void callEvent(BountiesEvent eventInfo){
         if(!eventHandlers.containsKey(eventInfo.getClass()))
             return;
@@ -232,6 +219,7 @@ public class LuckyBountiesAPI {
             }
         }
     }
+     */
     //endregion
 
     //region bountiesManagement

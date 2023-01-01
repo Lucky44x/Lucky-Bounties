@@ -2,6 +2,7 @@ package de.lucky44.luckybounties.system;
 
 import de.lucky44.api.luckybounties.events.BountyCollectEvent;
 import de.lucky44.luckybounties.LuckyBounties;
+import de.lucky44.luckybounties.chat.ChatManager;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
 import de.lucky44.luckybounties.util.bounty;
@@ -46,13 +47,13 @@ public class EventManager implements Listener {
                         e.setDeathMessage(LANG.getText("eco-bounty-take-global")
                                 .replace("[PLAYERNAME]", killer.getName())
                                 .replace("[TARGET]", killed.getName())
-                                .replace("[AMOUNT]", ""+ecoBounty.moneyPayment));
+                                .replace("[AMOUNT]", LuckyBounties.I.Vault.format(ecoBounty.moneyPayment)));
                     }
                     else{
                         Bukkit.broadcastMessage(LANG.getText("eco-bounty-take-global")
                                 .replace("[PLAYERNAME]", killer.getName())
                                 .replace("[TARGET]", killed.getName())
-                                .replace("[AMOUNT]", ""+ecoBounty.moneyPayment)
+                                .replace("[AMOUNT]", LuckyBounties.I.Vault.format(ecoBounty.moneyPayment))
                         );
                     }
                 }
@@ -64,10 +65,7 @@ public class EventManager implements Listener {
                                 .replace("[TARGET]", killed.getName()));
                     }
                     else{
-                        Bukkit.broadcastMessage(LANG.getText("bounty-take-global")
-                                .replace("[PLAYERNAME]", killer.getName())
-                                .replace("[TARGET]", killed.getName())
-                        );
+                        LuckyBounties.I.chatManager.bountyCollect(killer, killed, bounties.toArray(bounty[]::new));
                     }
                 }
             }
@@ -85,7 +83,6 @@ public class EventManager implements Listener {
                 killer.getWorld().dropItem(killed.getLocation(), LuckyBounties.I.cleanBountyItem(b));
             }
 
-            LuckyBounties.I.callEvent(new BountyCollectEvent(killer, killed, bounties.toArray(bounty[]::new)));
             LuckyBounties.I.clearBounties(killed.getUniqueId());
             LuckyBounties.I.fetchPlayer(killer.getUniqueId()).onCollect();
 

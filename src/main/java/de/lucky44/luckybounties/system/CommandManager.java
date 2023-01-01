@@ -6,7 +6,7 @@ import de.lucky44.api.luckybounties.events.EcoBountySetEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
-import de.lucky44.luckybounties.gui.guis.GUI_PlayerList;
+import de.lucky44.luckybounties.gui.guis.GUI_OnlinePlayerList;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import org.bukkit.Bukkit;
@@ -41,11 +41,18 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if(cmd.getName().equals("bounties")){
 
             if(args.length == 0){
-                GUI_PlayerList gui = new GUI_PlayerList(0 ,null);
+                GUI_OnlinePlayerList gui = new GUI_OnlinePlayerList(0 ,null);
                 gui.open((Player) sender);
             }
             else {
-                if(Objects.equals(args[0].toLowerCase(), "reload")){
+                if(args[0].equalsIgnoreCase("offline")){
+                    //TODO: Implement
+                    return true;
+
+                    //GUI_OfflinePlayerList gui = new GUI_OfflinePlayerList(0, null);
+                    //gui.open((Player) sender);
+                }
+                else if(Objects.equals(args[0].toLowerCase(), "reload")){
                     if(sender.hasPermission("lb.reload")){
                         LuckyBounties.I.reloadConfigData();
                         sender.sendMessage(LANG.getText("reload-complete"));
@@ -91,10 +98,16 @@ public class CommandManager implements CommandExecutor, TabCompleter {
                             return true;
                         }
 
+                        float minimum = CONFIG.getFloat("minimum-amount");
+                        if(payment < minimum){
+                            p.sendMessage(LANG.getText("bounty-too-low")
+                                    .replace("[MINIMUM]", LuckyBounties.I.Vault.format(minimum)));
+                            return true;
+                        }
+
                         if(LuckyBounties.I.Vault.getBalance(p) < payment){
                             p.sendMessage(LANG.getText("cannot-afford")
-                                    .replace("[AMOUNT]", ""+payment)
-                                    .replace("[SYMBOL]", CONFIG.getString("currency-symbol")));
+                                    .replace("[AMOUNT]", LuckyBounties.I.Vault.format(payment)));
                             return true;
                         }
 
@@ -203,11 +216,13 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if(args.length == 1){
             ret.add("--leave blank to open the GUI--");
 
-            if(LuckyBounties.I.Vault != null){
-                if(sender.hasPermission("lb.set")){
-                    ret.add("set");
-                }
+            //ret.add("offline");
 
+            if(sender.hasPermission("lb.set")){
+                ret.add("set");
+            }
+
+            if(LuckyBounties.I.Vault != null){
                 if(sender.hasPermission("lb.remove") && sender.hasPermission("lb.op")){
                     ret.add("remove");
                 }

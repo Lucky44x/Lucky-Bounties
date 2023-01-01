@@ -15,11 +15,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 public class GUIItems {
 
@@ -89,7 +87,7 @@ public class GUIItems {
         ItemStack I = new ItemStack(m);
         ItemMeta meta = I.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD.toString() + CONFIG.getInt("default-amount"));
+        meta.setDisplayName(ChatColor.BOLD + "" + ChatColor.GOLD.toString() + CONFIG.getFloat("default-amount"));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_DYE, ItemFlag.HIDE_ENCHANTS);
         I.setItemMeta(meta);
         return I;
@@ -100,8 +98,7 @@ public class GUIItems {
         ItemMeta meta = I.getItemMeta();
         assert meta != null;
         meta.setDisplayName(LANG.getText("eco-bounty-name")
-                .replace("[AMOUNT]", ""+b.moneyPayment)
-                .replace("[SYMBOL]", ""+ LuckyBounties.I.Vault.getSymbol()));
+                .replace("[AMOUNT]", LuckyBounties.I.Vault.format(b.moneyPayment)));
         I.setItemMeta(meta);
         return I;
     }
@@ -197,8 +194,7 @@ public class GUIItems {
 
             if(bounties[i].payment == null){
                 lore.add(LANG.getText("head-lore-eco-format")
-                        .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
-                        .replace("[AMOUNT]", bounties[i].moneyPayment+""));
+                        .replace("[AMOUNT]", LuckyBounties.I.Vault.format(bounties[i].moneyPayment)));
             }
             else{
                 lore.add(LANG.getText("head-lore-format")

@@ -1,7 +1,7 @@
 name: LuckyBounties
-version: 2.5.3
+version: 2.6
 main: de.lucky44.luckybounties.LuckyBounties
-api-version: 1.18
+api-version: 1.14
 load: STARTUP
 
 softdepend: [PlaceholderAPI, Vault]

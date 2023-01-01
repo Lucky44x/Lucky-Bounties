@@ -20,8 +20,7 @@ public class RankingNotification {
                     float reward = LuckyBounties.I.getEcoBounty(highestBounty.getUniqueId()).moneyPayment;
                     Bukkit.broadcastMessage(LANG.getText("ranking-message-eco")
                             .replace("[PLAYERNAME]", highestBounty.getName())
-                            .replace("[AMOUNT]", ""+reward)
-                            .replace("[SYMBOL]", CONFIG.getString("currency-symbol")));
+                            .replace("[AMOUNT]", LuckyBounties.I.Vault.format(reward)));
 
                 }
                 else{

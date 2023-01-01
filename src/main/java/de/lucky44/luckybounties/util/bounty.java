@@ -8,6 +8,7 @@ public class bounty {
 
     public bounty(float payment){
         this.moneyPayment = payment;
+        this.payment = null;
     }
 
     public bounty(ItemStack payment){

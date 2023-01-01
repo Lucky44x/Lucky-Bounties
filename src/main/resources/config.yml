@@ -16,7 +16,7 @@ papi-integration: false                     #Activates the PlaceholderAPI integr
 vault-integration: false                    #Activates the Vault integration so you can use an economy
 default-amount: 100                         #The default amount of currency that gets set in the bounty menu
 eco-item: gold_nugget                       #The item used to represent your currency
-currency-symbol: "$"
+minimum-amount: 0                           #The minimum amount for bounties, bounties below this amount are not allowed
 
 #==ETXRAS
 #RANKING SYSTEM             (LANG: Ranking message)

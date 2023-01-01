@@ -36,11 +36,12 @@ public abstract class GUI {
     //endregion
 
     //region public methods
-    public void open(Player user){
+    public Inventory open(Player user){
         this.user = user;
         onOpen(user);
         v = user.openInventory(inv);
         GUIManager.instance.registerGUI(this, user);
+        return inv;
     }
 
 

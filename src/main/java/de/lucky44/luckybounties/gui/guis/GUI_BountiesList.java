@@ -7,6 +7,7 @@ import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -88,6 +89,8 @@ public class GUI_BountiesList extends ChestGUI {
         if(hasLast)
             set(GUIItems.BackItem(), 52);
 
+        set(GUIItems.BackItem(), 45);
+
         if(CONFIG.getBool("disable-items") && CONFIG.getBool("vault-integration")){
 
             if(bounties.length == 0)
@@ -139,8 +142,7 @@ public class GUI_BountiesList extends ChestGUI {
             GUI_BountiesList updated = new GUI_BountiesList(target, page);
             updated.open(user);
         }
-
-        //Set Buttons
+        
         if(slot == itemBountySlot && item.getType() == Material.AMETHYST_SHARD){
             GUI_SetBounty setBounty = new GUI_SetBounty(target);
             setBounty.open(user);
@@ -202,6 +204,12 @@ public class GUI_BountiesList extends ChestGUI {
             LuckyBounties.I.removeBounty(target.getUniqueId(), bounties[index]);
             GUI_BountiesList newPage = new GUI_BountiesList(target, page);
             newPage.open(user);
+        }
+
+        //Back Button
+        if(slot == 45){
+            GUI_OnlinePlayerList playerList = new GUI_OnlinePlayerList(0, Bukkit.getOnlinePlayers().toArray(Player[]::new));
+            playerList.open(user);
         }
 
         //Page Buttons

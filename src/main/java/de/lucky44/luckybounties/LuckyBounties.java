@@ -59,8 +59,6 @@ public class LuckyBounties extends JavaPlugin {
     //region API
     public List<TabCompleter> completers = new ArrayList<>();
     public List<CommandExecutor> executors = new ArrayList<>();
-
-    public List<LuckyBountiesAPI> apiConnections = new ArrayList<>();
     //endregion
 
     @Override
@@ -203,15 +201,13 @@ public class LuckyBounties extends JavaPlugin {
             if(CONFIG.getBool("bounty-set-global")){
                 Bukkit.broadcastMessage(LANG.getText("eco-bounty-set-global")
                         .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : Bukkit.getPlayer(setter).getName())
-                        .replace("[AMOUNT]", ""+toAdd.moneyPayment)
-                        .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
+                        .replace("[AMOUNT]", Vault.format(toAdd.moneyPayment))
                         .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
             }
             else{
                 if(setter != null)
                     Bukkit.getPlayer(setter).sendMessage(LANG.getText("eco-bounty-set")
-                        .replace("[AMOUNT]", ""+ toAdd.moneyPayment)
-                        .replace("[SYMBOL]", CONFIG.getString("currency-symbol"))
+                        .replace("[AMOUNT]", Vault.format(toAdd.moneyPayment))
                         .replace("[TARGET]", Bukkit.getPlayer(id).getName()));
             }
 
@@ -278,11 +274,13 @@ public class LuckyBounties extends JavaPlugin {
     }
 
     public void removeBounty(UUID id, int index){
+        fetchPlayer(id).onRemoved();
         bounties.computeIfAbsent(id, k -> new ArrayList<>()).remove(index);
     }
 
     public  void removeBounty(UUID id, bounty b){
         bounties.computeIfAbsent(id, k -> new ArrayList<>()).remove(b);
+        fetchPlayer(id).onRemoved();
     }
 
     public void removeBounty(UUID target, float amount){
@@ -400,9 +398,7 @@ public class LuckyBounties extends JavaPlugin {
 
     //region API-connection
     public void callEvent(BountiesEvent e){
-        for(LuckyBountiesAPI api : apiConnections){
-            api.callEvent(e);
-        }
+        Bukkit.getServer().getPluginManager().callEvent(e);
     }
     //endregion
 }
