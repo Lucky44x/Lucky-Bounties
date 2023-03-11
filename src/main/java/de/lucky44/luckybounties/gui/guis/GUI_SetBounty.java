@@ -1,14 +1,20 @@
 package de.lucky44.luckybounties.gui.guis;
 
 import de.lucky44.api.luckybounties.events.BountySetEvent;
+import de.lucky44.luckybounties.files.DebugLog;
 import de.lucky44.luckybounties.gui.core.ChestGUI;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.lang.LANG;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
+import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 public class GUI_SetBounty extends ChestGUI {
 
@@ -40,7 +46,15 @@ public class GUI_SetBounty extends ChestGUI {
     @Override
     public void onClick(int slot, ItemStack item) {
 
+        if(target == null || Bukkit.getServer().getPlayer(target.getUniqueId()) == null){
+            close();
+            DebugLog.info("[GUI] => ERROR Forcing Close Chest-GUI of type GUI_SetBounty for " + user.getName() + " because target is no longer online");
+            user.sendMessage(LANG.getText("player-not-found").replace("[PLAYERNAME]", "Target"));
+            return;
+        }
+
         if(slot == 8){
+
             if(inv.getItem(4) == null){
                 user.sendMessage(LANG.getText("no-bounty-item"));
                 close();
@@ -48,6 +62,21 @@ public class GUI_SetBounty extends ChestGUI {
             else{
                 ItemStack bountyPayment = v.getItem(4);
                 bounty b = new bounty(bountyPayment);
+
+                switch (LuckyBounties.I.isBountyValid(b)) {
+                    case (1) -> {
+                        user.sendMessage(LANG.getText("blacklist-error").replace("[ITEM]", b.payment.getType().name()));
+                        user.getInventory().addItem(bountyPayment);
+                        close();
+                        return;
+                    }
+                    case (2) -> {
+                        user.sendMessage(LANG.getText("whitelist-error").replace("[ITEM]", b.payment.getType().name()));
+                        user.getInventory().addItem(bountyPayment);
+                        close();
+                        return;
+                    }
+                }
 
                 BountySetEvent event = new BountySetEvent(user, target, b);
                 LuckyBounties.I.callEvent(event);

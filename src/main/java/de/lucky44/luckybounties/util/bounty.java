@@ -15,4 +15,12 @@ public class bounty {
         this.moneyPayment = -1;
         this.payment = payment;
     }
+
+    public String toString(){
+        if(moneyPayment != -1){
+            return "" + moneyPayment;
+        }
+
+        return payment.getType().toString() + " x" + payment.getAmount();
+    }
 }

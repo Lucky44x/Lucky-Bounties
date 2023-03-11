@@ -20,7 +20,7 @@ public class ChatManager_Normal extends ChatManager {
     @Override
     public void bountySet(Player target, Player setter, ItemStack item){
         String fullMessage = LANG.getText("bounty-set-global")
-                .replace("[PLAYERNAME]", setter.getName())
+                .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : setter.getName())
                 .replace("[TARGET]", target.getName())
                 .replace("[AMOUNT]", ""+item.getAmount())
                 .replace("[ITEM]", ""+item.getType().name());

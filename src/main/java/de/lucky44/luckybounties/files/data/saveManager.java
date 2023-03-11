@@ -16,6 +16,41 @@ import java.util.UUID;
 
 public class saveManager {
 
+    public static void SaveReturnBuffer(UUID player, List<bounty> bounties) throws IOException{
+        File save = new File("plugins/LuckyBounties/bounties/" + player.toString() + ".return-buffer.bounties");
+
+        File dir = new File("plugins/LuckyBounties/bounties");
+        if(!dir.exists()){
+            save.getParentFile().mkdir();
+        }
+
+        save.createNewFile();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+
+        bounty eco = LuckyBounties.I.getEcoBounty(player);
+
+        int actualSize = bounties.size();
+        if(eco != null)
+            actualSize--;
+
+        dataOutput.writeInt(actualSize);
+        dataOutput.writeFloat(eco == null ? -1 : eco.moneyPayment);
+        for(bounty b : bounties){
+            if(b.moneyPayment > 0)
+                continue;
+
+            dataOutput.writeObject(b.payment);
+        }
+
+        dataOutput.close();
+        FileWriter fw = new FileWriter(save);
+        PrintWriter pw = new PrintWriter(fw);
+        pw.print(new String(Base64Coder.encodeLines(outputStream.toByteArray())));
+        pw.close();
+    }
+
     public static void SaveBounties(UUID player, List<bounty> bounties) throws IOException {
         File save = new File("plugins/LuckyBounties/bounties/" + player.toString() + ".bounties");
 

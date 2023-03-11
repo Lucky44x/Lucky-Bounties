@@ -41,8 +41,10 @@ cooldown-not-done: "&cYou can't already set another bounty on [TARGET]"
 items-disabled: "&cItems are disabled"
 self-bounty-error: "&cYou cannot set a bounty on yourself"
 inventory-full: "&cYour Inventory is full"
-not-a-number: "Not a number"
-bounty-too-low: "Minimum is [MINIMUM]"
+not-a-number: "&cNot a number"
+bounty-too-low: "&cMinimum is [MINIMUM]"
+whitelist-error: "&c[ITEM] is not whitelisted"
+blacklist-error: "&c[ITEM] is blacklisted"
 
 #Messages - Notifications
 reload-complete: "&aReloaded config"
@@ -52,6 +54,7 @@ ranking-message: "&l[PLAYERNAME] is wanted for [AMOUNT] bounties. &cHunt them do
 ranking-message-eco: "&l[PLAYERNAME] is wanted for [AMOUNT][SYMBOL]. &cHunt them down to collect the reward!"
 removed-bounty: "&aRemoved bounty from [PLAYERNAME]"
 eco-bounty-set: "&aSet bounty of [AMOUNT][SYMBOL] on [TARGET]"
+bounty-expired: "&a Your bounty of [AMOUNT]x[ITEM] on [TARGET] has expired"
 
 #Messages - GLOBAL - Notifications
 bounty-set-global: "[PLAYERNAME] set a bounty of &b[AMOUNT]x [ITEM]&r on [TARGET]"

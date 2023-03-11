@@ -8,11 +8,15 @@ import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.timers.RankingNotification;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class CONFIG {
 
@@ -86,6 +90,18 @@ public class CONFIG {
         if(CooldownManager.I.globalCooldown != getBool("global-cooldown"))
             CooldownManager.I.flushData();
         CooldownManager.I.globalCooldown = getBool("global-cooldown");
+
+        ArrayList<Material> blacklisted = new ArrayList<>();
+        for(String s : getStringList("blacklist")){
+            blacklisted.add(Material.getMaterial(s.toUpperCase()));
+        }
+        LuckyBounties.I.BlackList.setFilters(blacklisted);
+
+        ArrayList<Material> whitelisted = new ArrayList<>();
+        for(String s : getStringList("whitelist")){
+            whitelisted.add(Material.getMaterial(s.toUpperCase()));
+        }
+        LuckyBounties.I.WhiteList.setFilters(whitelisted);
     }
     public static void saveDefaultConfig(){
         instance.saveDefaultConfig();
@@ -109,6 +125,7 @@ public class CONFIG {
             String[] units = time.split("_");
             long base = Long.parseLong(units[0]);
             long multiplier = switch (units[1]) {
+                case ("d") -> 1728000;
                 case ("h") -> 72000;
                 case ("m") -> 1200;
                 case ("s") -> 20;
@@ -126,6 +143,7 @@ public class CONFIG {
             String[] units = time.split("_");
             long base = Long.parseLong(units[0]);
             long multiplier = switch (units[1]) {
+                case ("d") -> 86400000;
                 case ("h") -> 3600000;
                 case ("m") -> 60000;
                 case ("s") -> 1000;
@@ -134,5 +152,20 @@ public class CONFIG {
             out += base * multiplier;
         }
         return out;
+    }
+
+    public static List<String> getStringList(String identifier){
+        if(config == null)
+            return Stream.of(ChatColor.RED + "ERROR: NO LANG FILE LOADED").toList();
+
+        if(config.getStringList(identifier).size() == 0)
+            return Stream.of(ChatColor.RED + "ERROR: NO PARAMETER FOR " + identifier).toList();
+
+        List<String> ret = new ArrayList<>();
+        for(String s : config.getStringList(identifier)){
+            ret.add(ChatColor.translateAlternateColorCodes('&', s));
+        }
+
+        return ret;
     }
 }

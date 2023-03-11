@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class LANG {
-
     private static File langFile;
     private static FileConfiguration langFileConfig;
 

@@ -16,6 +16,47 @@ import java.util.UUID;
 
 public class loadManager {
 
+    public static void loadReturnBuffer() throws IOException, ClassNotFoundException {
+        File folder = new File("plugins/LuckyBounties/bounties");
+        if(!folder.exists())
+            return;
+
+        File[] allFiles = folder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".return-buffer.bounties");
+            }
+        });
+
+        for(File f : allFiles){
+            UUID target = UUID.fromString(f.getName().split("\\.")[0]);
+
+            InputStream stream = new FileInputStream(f);
+            String data = readFromInputStream(stream);
+            stream.close();
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64Coder.decodeLines(data));
+            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
+
+            int size = dataInput.readInt();
+
+            //LuckyBounties.I.getLogger().info("Loading " + size + " bounties");
+
+            float moneyBounty = dataInput.readFloat();
+            if(moneyBounty != -1){
+                //LuckyBounties.I.getLogger().info("Found money bounty: " + moneyBounty);
+                LuckyBounties.I.returnBuffer.computeIfAbsent(target, k -> new ArrayList<bounty>()).add(new bounty(moneyBounty));
+            }
+
+            for(int i = 0; i < size; i++){
+                //LuckyBounties.I.getLogger().info("Loading " + i + "th bounty");
+                bounty b = new bounty((ItemStack)dataInput.readObject());
+                LuckyBounties.I.returnBuffer.computeIfAbsent(target, k -> new ArrayList<bounty>()).add(b);
+            }
+
+            dataInput.close();
+        }
+    }
+
     public static void loadBounties() throws IOException, ClassNotFoundException {
         File folder = new File("plugins/LuckyBounties/bounties");
         if(!folder.exists())
@@ -23,7 +64,7 @@ public class loadManager {
 
         File[] allFiles = folder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".bounties");
+                return name.toLowerCase().endsWith(".bounties") && !name.toLowerCase().contains("return-buffer");
             }
         });
 

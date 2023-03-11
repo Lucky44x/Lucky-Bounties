@@ -1,0 +1,22 @@
+# ==EVENT COMMANDS
+# since some people wanted comamnds when people do stuff, I moved this into a seperate config file. You can disable each command by simply
+# having only one empty string in the list (like shown below):
+#
+# kill-without-bounty-penalty:
+#   - ""
+#
+# This will disable the command
+
+
+#PARAMS: [KILLER] [KILLED]
+kill-without-bounty-penalty:
+  - "say &c[KILLER] you have killed an innocent!"   #Executes commands when someone kills a person without bounties
+
+#PARAMS: [TARGET] [SETTER] [AMOUNT] [ITEM]
+on-set-bounty:
+  - ""
+
+#PARAMS: [TARGET] [SETTER] [AMOUNT]
+on-set-eco-bounty:
+  - ""
+
