@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.gui.core;
 
+import de.lucky44.luckybounties.files.DebugLog;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -41,6 +42,7 @@ public abstract class GUI {
         onOpen(user);
         v = user.openInventory(inv);
         GUIManager.instance.registerGUI(this, user);
+        DebugLog.info("[GUI] Opening GUI: " + name + " of Type " + this.getClass().getName() + " for " + user.getName());
         return inv;
     }
 

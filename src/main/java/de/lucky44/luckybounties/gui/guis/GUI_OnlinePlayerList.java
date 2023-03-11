@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.gui.guis;
 
+import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.lang.LANG;
 import de.lucky44.luckybounties.gui.core.ChestGUI;
 import org.bukkit.Bukkit;
@@ -16,10 +17,10 @@ public class GUI_OnlinePlayerList extends ChestGUI {
 
     Player[] players;
 
-    public GUI_OnlinePlayerList(int page, Player[] players){
+    public GUI_OnlinePlayerList(int page, Player[] players, Player viewer){
 
         if(players == null)
-            players = Bukkit.getOnlinePlayers().toArray(Player[]::new);
+            players = LuckyBounties.I.getVisiblePlayers(viewer);
 
         this.players = players;
 
@@ -85,18 +86,13 @@ public class GUI_OnlinePlayerList extends ChestGUI {
     @Override
     public void onClick(int slot, ItemStack item) {
 
-        if(slot == pageRows*9-1){
-            if(!hasNext)
-                return;
-
-            GUI_OnlinePlayerList list = new GUI_OnlinePlayerList(page+1, players);
+        if(slot == pageRows*9-1 && hasNext){
+            GUI_OnlinePlayerList list = new GUI_OnlinePlayerList(page+1, players, user);
             list.open(user);
         }
-        else if(slot == (pageRows-1)*9){
-            if(!hasLast)
-                return;
 
-            GUI_OnlinePlayerList list = new GUI_OnlinePlayerList(page-1, players);
+        if(slot == (pageRows-1)*9 && hasLast){
+            GUI_OnlinePlayerList list = new GUI_OnlinePlayerList(page-1, players, user);
             list.open(user);
         }
 

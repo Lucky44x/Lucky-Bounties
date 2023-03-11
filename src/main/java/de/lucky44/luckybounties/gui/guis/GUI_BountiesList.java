@@ -109,6 +109,10 @@ public class GUI_BountiesList extends ChestGUI {
         }
     }
 
+    private void checkExpiredBounties(){
+
+    }
+
     private void doSetItemCheck(int slot){
         if(!user.hasPermission("lb.set")){
             set(GUIItems.ErrorSlotItem(LANG.getText("missing-set-permission")), slot);
@@ -143,7 +147,7 @@ public class GUI_BountiesList extends ChestGUI {
             updated.open(user);
         }
         
-        if(slot == itemBountySlot && item.getType() == Material.AMETHYST_SHARD){
+        if(slot == itemBountySlot && item.getType() == Material.PAPER){
             GUI_SetBounty setBounty = new GUI_SetBounty(target);
             setBounty.open(user);
         }
@@ -208,7 +212,7 @@ public class GUI_BountiesList extends ChestGUI {
 
         //Back Button
         if(slot == 45){
-            GUI_OnlinePlayerList playerList = new GUI_OnlinePlayerList(0, Bukkit.getOnlinePlayers().toArray(Player[]::new));
+            GUI_OnlinePlayerList playerList = new GUI_OnlinePlayerList(0, null, user);
             playerList.open(user);
         }
 

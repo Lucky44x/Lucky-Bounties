@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Item;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -24,7 +25,7 @@ public abstract class ChatManager {
         HoverEvent event = new HoverEvent(HoverEvent.Action.SHOW_ITEM, hoverEventComponents);
 
         String fullMessage = LANG.getText("bounty-set-global")
-                .replace("[PLAYERNAME]", setter.getName())
+                .replace("[PLAYERNAME]", setter == null ? LANG.getText("console-setter-name") : setter.getName())
                 .replace("[TARGET]", target.getName())
                 .replace("[AMOUNT]", ""+item.getAmount());
 
@@ -45,17 +46,21 @@ public abstract class ChatManager {
     }
 
     public void bountyCollect(Player killer, Player killed, bounty[] bounties){
-        BaseComponent[] hoverEventComponents = new BaseComponent[bounties.length];
-        for(int i = 0; i < hoverEventComponents.length; i++){
+        StringBuilder text = new StringBuilder();
+        for(int i = 0; i < bounties.length; i++){
             if(bounties[i].payment == null){
-                hoverEventComponents[i] = new TextComponent(LuckyBounties.I.Vault.format(bounties[i].moneyPayment));
+                text.append(LuckyBounties.I.Vault.format(bounties[i].moneyPayment) + "\n");
                 continue;
             }
 
-            hoverEventComponents[i] = new TextComponent(bounties[i].payment.getItemMeta().getDisplayName());
+            String name = bounties[i].payment.getItemMeta().getDisplayName();
+            if(name.isEmpty() || name.isBlank())
+                name = bounties[i].payment.getType().name();
+
+            text.append(bounties[i].payment.getAmount() + "x " + name + "\n");
         }
 
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents);
+        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(text.toString()));
 
         String fullMessage = LANG.getText("bounty-take-global")
                 .replace("[PLAYERNAME]", killer.getName())
@@ -63,8 +68,15 @@ public abstract class ChatManager {
 
         String[] parts = fullMessage.split("\\[BOUNTIES]");
         String part1 = parts[0];
-        String bountiesText = parts[1].split("}")[0];
-        String rest = parts[1].split("}")[1];
+
+        String bountiesText = "bounties";
+        String rest = "";
+        if(!fullMessage.contains("}")){
+            bountiesText = parts[1].split("}")[0];
+
+            if(parts[1].split("}").length > 1)
+                rest = parts[1].split("}")[1];
+        }
 
         TextComponent eventComponent = new TextComponent(bountiesText);
         eventComponent.setHoverEvent(hoverEvent);

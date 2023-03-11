@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.timers;
 
+import de.lucky44.luckybounties.files.DebugLog;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import org.bukkit.entity.Player;
 
@@ -17,6 +18,7 @@ public class CooldownManager {
     public long cooldownTime = 0;
 
     public CooldownManager(){
+        DebugLog.info("[COOLDOWN-MANAGER] Initializing Cooldown-Manager");
         cooldownMap = new HashMap<>();
         I = this;
     }
@@ -26,6 +28,8 @@ public class CooldownManager {
     }
 
     public void setBounty(Player target, Player setter){
+
+        DebugLog.info("[COOLDOWN-MANAGER] Setting cooldown after bounty set");
 
         cooldownMap.computeIfAbsent(target.getUniqueId(), k -> new HashMap<>());
 

@@ -2,11 +2,13 @@ package de.lucky44.luckybounties.gui.guis;
 
 import de.lucky44.api.luckybounties.events.EcoBountySetEvent;
 import de.lucky44.luckybounties.LuckyBounties;
+import de.lucky44.luckybounties.files.DebugLog;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,12 +29,21 @@ public class GUI_EcoSetBounty {
         this.user = user;
         ItemStack item = GUIItems.EcoSetAnvilItem();
 
+        DebugLog.info("[ANVIL-GUI] Opening Anvil-GUI of type GUI_EcoSetBounty for " + user.getName());
+
         new AnvilGUI.Builder()
                 .onClose(player -> {
                     //GUI_BountiesList BountiesGUI = new GUI_BountiesList(target, 0);
                     //BountiesGUI.open(user);
                 })
                 .onComplete((completion) -> {
+
+                    if(target == null || Bukkit.getServer().getPlayer(target.getUniqueId()) == null){
+                        return List.of(AnvilGUI.ResponseAction.close(), AnvilGUI.ResponseAction.run(() -> {
+                            DebugLog.info("[ANVIL-GUI] => ERROR Forcing Close Anvil-GUI of type GUI_EcoSetBounty for " + user.getName() + " because target is no longer online");
+                        }));
+                    }
+
                     String text = completion.getText();
                     if(text.matches("[-+]?[0-9]*\\.?[0-9]+")){
                         float amount = Float.parseFloat(text);
@@ -61,7 +72,10 @@ public class GUI_EcoSetBounty {
                         LuckyBounties.I.addBounty(target.getUniqueId(), toSet, user.getUniqueId());
                         CooldownManager.I.setBounty(target, user);
                         GUI_BountiesList bList = new GUI_BountiesList(target, 0);
-                        return List.of(AnvilGUI.ResponseAction.close(), AnvilGUI.ResponseAction.openInventory(bList.open(user)));
+                        return List.of(AnvilGUI.ResponseAction.close(), AnvilGUI.ResponseAction.run(() -> {
+                            DebugLog.info("[ANVIL-GUI] Closing Anvil-GUI of type GUI_EcoSetBounty for " + user.getName());
+                            bList.open(user);
+                        }));
                     }
                     else{
                         return List.of(AnvilGUI.ResponseAction.replaceInputText(LANG.getText("not-a-number").replace("[INPUT]", text)));

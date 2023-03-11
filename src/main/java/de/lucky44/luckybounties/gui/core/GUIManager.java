@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.gui.core;
 
+import de.lucky44.luckybounties.files.DebugLog;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -9,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
@@ -23,6 +25,7 @@ public class GUIManager implements Listener {
     private final Map<Player, GUI> guis = new HashMap<>();
 
     public GUIManager(Plugin pluginInstance){
+        DebugLog.info("[GUIMANAGER] Initializing GUIManager Instance (Singleton Structure) from plugin: LuckyBounties");
 
         if(instance != null)
             return;
@@ -30,6 +33,7 @@ public class GUIManager implements Listener {
         instance = this;
 
         Bukkit.getServer().getPluginManager().registerEvents(this, pluginInstance);
+        DebugLog.info("[GUIMANAGER] registered eventSystem for GUIManager");
     }
 
     @EventHandler
@@ -56,17 +60,20 @@ public class GUIManager implements Listener {
             */
 
         guis.put(p, toRegister);
-        //Bukkit.getLogger().info("[LuckyGUI] registered GUI");
+        DebugLog.info("[GUIMANAGER] registered GUI for " + p.getName());
     }
 
     public void close(Player p){
 
-        if(!guis.containsKey(p))
+        DebugLog.info("[GUIMANAGER] Trying to close GUI for " + p.getName());
+        if(!guis.containsKey(p)){
+            DebugLog.error("[GUIMANAGER] Trying to close GUI for " + p.getName() + " failed: No GUI is registered for this player");
             return;
+        }
 
         guis.get(p).onClose();
         guis.remove(p);
-        //Bukkit.getLogger().info("[LuckyGUI] de-registered GUI");
+        DebugLog.info("[GUIMANAGER] de-registered GUI for " + p.getName());
     }
 
     @EventHandler
@@ -74,17 +81,17 @@ public class GUIManager implements Listener {
         Player user = (Player)e.getWhoClicked();
         GUI toSend = guis.get(user);
         if(toSend == null){
-            //pluginInstance.getLogger().info("No GUI registered for player " + e.getWhoClicked().getName());
+            DebugLog.warn("[GUIMANAGER] No GUI registered for player " + e.getWhoClicked().getName());
             return;
         }
 
         if(e.getClickedInventory() == null){
-            //pluginInstance.getLogger().info("Clicked Inventory does not exist");
+            DebugLog.warn("[GUIMANAGER] Clicked Inventory does not exist");
             return;
         }
 
         if(toSend.inv.getType() != e.getClickedInventory().getType()){
-            //pluginInstance.getLogger().info("Clicked Inventory (" + e.getClickedInventory().getType() + ") is not registered as GUI (" + toSend.inv.getType() + ")");
+            DebugLog.warn("[GUIMANAGER] Clicked Inventory (" + e.getClickedInventory().getType() + ") is not registered as GUI (" + toSend.inv.getType() + ")");
             return;
         }
 
@@ -96,7 +103,7 @@ public class GUIManager implements Listener {
 
         toSend.onClick(slot, item);
 
-        //pluginInstance.getLogger().info(e.getClickedInventory().getType().toString() + " : " + slot);
+        DebugLog.info("[GUIMANAGER] Click event in " + user.getName() + "'s  inventory: " + e.getClickedInventory().getType().toString() + " : " + slot);
 
         if(!(toSend instanceof ChestGUI toSendChestGUI)){
             e.setResult(Event.Result.DENY);

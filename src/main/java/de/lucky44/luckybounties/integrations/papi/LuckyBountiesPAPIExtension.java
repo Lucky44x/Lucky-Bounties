@@ -1,6 +1,7 @@
 package de.lucky44.luckybounties.integrations.papi;
 
 import de.lucky44.luckybounties.LuckyBounties;
+import de.lucky44.luckybounties.files.DebugLog;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +26,7 @@ public class LuckyBountiesPAPIExtension extends PlaceholderExpansion {
     private final LuckyBounties plugin;
 
     public LuckyBountiesPAPIExtension(){
+        DebugLog.info("[PAPI-INT] Connected to PlaceHolderAPI (Hopefully, no checks in place)");
         plugin = LuckyBounties.I;
     }
 

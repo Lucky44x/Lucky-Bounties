@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -144,11 +145,13 @@ public class GUIItems {
     }
 
     public static ItemStack SetItem(){
-        ItemStack set = new ItemStack(Material.AMETHYST_SHARD);
+        ItemStack set = new ItemStack(Material.PAPER);
         ItemMeta meta = set.getItemMeta();
         assert meta != null;
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', LANG.getText("set-button")));
         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        meta.addEnchant(Enchantment.DURABILITY, 1, true);
         set.setItemMeta(meta);
         return set;
     }

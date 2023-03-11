@@ -35,4 +35,12 @@ public class BountyCollectEvent extends BountiesEvent{
 
         droppedBounties = data.toArray(BountyData[]::new);
     }
+
+    public String getBountiesString(){
+        StringBuilder text = new StringBuilder();
+        for(BountyData data : droppedBounties){
+            text.append(data.payment().getAmount() + "x " + (data.payment().getItemMeta().getDisplayName().isEmpty() || data.payment().getItemMeta().getDisplayName().isBlank() ? data.payment().getType().name() : data.payment().getItemMeta().getDisplayName()) + "\n");
+        }
+        return text.toString();
+    }
 }

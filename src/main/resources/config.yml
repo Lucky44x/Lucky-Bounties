@@ -28,14 +28,29 @@ ranking-message-interval: "1_h:1_m:1_s"     # 1m = 1 minute, 1h = 1 hour, 1s = 1
 set-by-lore: false                          #Shows who set a bounty in the item-lore
 disable-items: false                        #Disables the Item support of the plugin completely
 allow-self-bounty: true                     #Allows players to set bounties on themselves
+return-bounties-when-cleared: false         #Returns cleared bounties (feather-clicked, not individual-clicked) to setter
 
-#COOLDOWN
+#TIMING STUFF
+bounties-expire: false                      #Should bounties expire after a certain time ?
+bounty-expire-time: "2_d:12_h:6_m:3_s"      #How long until bounties expire
+return-after-expire: false                  #Should bounties be returned after they expire ?
+
 cooldown-enabled: true                      #Enables a cooldown so your players cannot spam bounties
 global-cooldown: false                      #If enabled, no one can set a bounty during that time, if disabled, the cooldown locks individual players instead of the entire server
 cooldown-time: "10_s"                       #1m = 1 minute, 1h = 1 hour, 1s = 1 second
 
+#LISTS
+enable-blacklist: true
+blacklist:
+  - command_block                           #Blacklists Items from being set. (All these values will work: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+  - command_block_minecart
+
+enable-whitelist: false
+whitelist:                                  #Whitelist will overpower blacklist
+  - diamond                                 #Will only allow these items as bounties. (All these values will work: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
+
 #OPERATOR SETTINGS
 op-ignore-cooldown: false                   #Should Operators ignore the cooldown
 
-#EVENT
-kill-without-bounty-penalty: "say &c[KILLER] you have killed an innocent!"   #Executes a command when a player without a bounty is killed. will be disabled when the command is empty. [KILLER] [KILLED]
+#==DEBUG
+debug-log: false                            #Only turn on when requested to search for a bug. Will log all the otherwise invisible backend plugin stuff

@@ -6,10 +6,13 @@ import de.lucky44.api.luckybounties.events.EcoBountySetEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import de.lucky44.luckybounties.files.lang.LANG;
+import de.lucky44.luckybounties.gui.guis.GUI_BountiesList;
 import de.lucky44.luckybounties.gui.guis.GUI_OnlinePlayerList;
 import de.lucky44.luckybounties.timers.CooldownManager;
 import de.lucky44.luckybounties.util.bounty;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,10 +30,14 @@ public class CommandManager implements CommandExecutor, TabCompleter {
     public boolean onCommand(CommandSender sender, Command cmd, String s, String[] args) {
 
         Player p = null;
-        if(sender instanceof Player)
+        if(sender instanceof Player){
             p = (Player)sender;
-        else
+        }
+        else{
+            handleConsoleCommand(sender, cmd, args);
             return true;
+        }
+
 
         if(LuckyBounties.I.executors.size() > 0){
             for(CommandExecutor e : LuckyBounties.I.executors){
@@ -41,7 +48,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
         if(cmd.getName().equals("bounties")){
 
             if(args.length == 0){
-                GUI_OnlinePlayerList gui = new GUI_OnlinePlayerList(0 ,null);
+                GUI_OnlinePlayerList gui = new GUI_OnlinePlayerList(0 ,null, (Player) sender);
                 gui.open((Player) sender);
             }
             else {
@@ -134,12 +141,23 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                         b = new bounty(holding);
 
+                        switch (LuckyBounties.I.isBountyValid(b)) {
+                            case (1) -> {
+                                p.sendMessage(LANG.getText("blacklist-error").replace("[ITEM]", b.payment.getType().name()));
+                                return true;
+                            }
+                            case (2) -> {
+                                p.sendMessage(LANG.getText("whitelist-error").replace("[ITEM]", b.payment.getType().name()));
+                                return true;
+                            }
+                        }
+
                         BountySetEvent event = new BountySetEvent(p, target, b);
                         LuckyBounties.I.callEvent(event);
                         if(event.isCancelled())
                             return true;
 
-                        p.getInventory().remove(p.getInventory().getItemInMainHand());
+                        p.getInventory().removeItem(p.getInventory().getItemInMainHand());
                     }
 
                     CooldownManager.I.setBounty(target, p);
@@ -184,12 +202,147 @@ public class CommandManager implements CommandExecutor, TabCompleter {
 
                     p.sendMessage(LANG.getText("removed-bounty").replace("[PLAYERNAME]", target.getName()));
                 }
+                else if(args[0].equalsIgnoreCase("open")){
+                    if(args.length < 2)
+                        return true;
+
+                    Player target = Bukkit.getPlayer(args[1]);
+
+                    if(target == null){
+                        p.sendMessage(LANG.getText("player-not-found").replace("[PLAYERNAME]", args[1]));
+                        return true;
+                    }
+
+                    GUI_BountiesList bountiesList = new GUI_BountiesList(target, 0);
+                    bountiesList.open(p);
+                }
             }
         }
 
         return true;
     }
 
+    private void handleConsoleCommand(CommandSender sender, Command cmd, String[] args){
+        if(cmd.getName().equals("bounties")){
+
+            if(args.length == 0)
+                return;
+
+            if(args[0].equalsIgnoreCase("debug")){
+                switch(args[1]){
+                    case("commandlist"):
+                        for(String s : CONFIG.getStringList("kill-without-bounty-penalty")){
+                            sender.sendMessage(s);
+                        }
+
+                        if(CONFIG.getStringList("kill-without-bounty-penalty").size() == 0)
+                            sender.sendMessage(ChatColor.RED + "No entries in command list");
+                }
+            }
+            if(args[0].equalsIgnoreCase("reload")){
+                LuckyBounties.I.reloadConfigData();
+                sender.sendMessage(LANG.getText("reload-complete"));
+            }
+
+            if(args.length < 3)
+                return;
+
+            if(args[0].equals("add")){
+
+                Player target = Bukkit.getPlayer(args[1]);
+
+                bounty b = null;
+
+                if(args[2].equalsIgnoreCase("eco")){
+                    if(LuckyBounties.I.Vault == null){
+                        sender.sendMessage(LANG.getText("economy-disabled"));
+                        return;
+                    }
+
+                    float payment = 0;
+                    payment = Float.parseFloat(args[3]);
+
+                    if(payment <= 0){
+                        sender.sendMessage(LANG.getText("bounty-below-zero"));
+                        return;
+                    }
+
+                    float minimum = CONFIG.getFloat("minimum-amount");
+                    if(payment < minimum){
+                        sender.sendMessage(LANG.getText("bounty-too-low")
+                                .replace("[MINIMUM]", LuckyBounties.I.Vault.format(minimum)));
+                        return;
+                    }
+
+                    b = new bounty(payment);
+
+                    EcoBountySetEvent event = new EcoBountySetEvent(null, target, payment);
+                    LuckyBounties.I.callEvent(event);
+                    if(event.isCancelled())
+                        return;
+                }
+                else{
+                    if(CONFIG.getBool("disable-items")){
+                        sender.sendMessage(LANG.getText("items-disabled"));
+                        return;
+                    }
+
+                    int amount = 1;
+                    amount = Integer.parseInt(args[3]);
+
+                    Material m = Material.getMaterial(args[2].toUpperCase());
+                    if(m == null){
+                        sender.sendMessage(ChatColor.RED + "Material was NULL");
+                        return;
+                    }
+
+                    ItemStack payment = new ItemStack(m, amount);
+                    b = new bounty(payment);
+
+                    BountySetEvent event = new BountySetEvent(null, target, b);
+                    LuckyBounties.I.callEvent(event);
+                    if(event.isCancelled())
+                        return;
+                }
+
+                LuckyBounties.I.addBounty(target.getUniqueId(), b, null);
+            }
+
+            if(args[0].equals("remove")){
+                if(LuckyBounties.I.Vault == null){
+                    sender.sendMessage(LANG.getText("economy-disabled"));
+                    return;
+                }
+
+                Player target = Bukkit.getPlayer(args[1]);
+                if(target == null){
+                    sender.sendMessage(LANG.getText("player-not-found").replace("[PLAYERNAME]", args[1]));
+                    return;
+                }
+
+                float amount = Float.parseFloat(args[2]);
+
+                bounty ecoBounty = LuckyBounties.I.getEcoBounty(target.getUniqueId());
+                if(ecoBounty == null)
+                    return;
+
+                EcoBountyRemoveEvent event = new EcoBountyRemoveEvent(null, target, amount);
+                LuckyBounties.I.callEvent(event);
+                if(event.isCancelled())
+                    return;
+
+                ecoBounty.moneyPayment -= amount;
+                if(ecoBounty.moneyPayment <= 0){
+                    LuckyBounties.I.removeBounty(target.getUniqueId(), ecoBounty);
+                }
+
+                LuckyBounties.I.fetchPlayer(target.getUniqueId()).ecoWorth = ecoBounty.moneyPayment;
+                LuckyBounties.I.getHighestEcoBounty();
+
+                sender.sendMessage(LANG.getText("removed-bounty").replace("[PLAYERNAME]", target.getName()));
+            }
+        }
+    }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String s, String[] args) {
@@ -214,9 +367,11 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             return ret;
 
         if(args.length == 1){
-            ret.add("--leave blank to open the GUI--");
+            //ret.add("--leave blank to open the GUI--");
 
             //ret.add("offline");
+
+            ret.add("open");
 
             if(sender.hasPermission("lb.set")){
                 ret.add("set");
@@ -233,7 +388,7 @@ public class CommandManager implements CommandExecutor, TabCompleter {
             }
         }
         else if(args.length == 2){
-            if(args[0].equals("set") || args[0].equals("remove")){
+            if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("open")){
                 if(LuckyBounties.I.Vault != null){
                     for(Player p : Bukkit.getOnlinePlayers()){
                         ret.add(p.getName());

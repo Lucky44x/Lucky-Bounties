@@ -1,5 +1,6 @@
 package de.lucky44.luckybounties.integrations.vault;
 
+import de.lucky44.luckybounties.files.DebugLog;
 import de.lucky44.luckybounties.files.config.CONFIG;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
@@ -18,13 +19,15 @@ public class VaultIntegration {
     }
 
     private void errorNotRegistered(){
-        Bukkit.getLogger().info(ChatColor.RED + "Could not find a registered vault service provider");
+        DebugLog.error("[VAULT-INT] Could not find a vault-service-provider");
+        Bukkit.getLogger().warning("Could not find a registered vault service provider");
     }
 
     private boolean checkEconomy(){
         if(econ != null)
             return true;
 
+        DebugLog.info("[VAULT-INT] Trying to connect to Vault service-provider");
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         if(rsp == null){
             errorNotRegistered();
