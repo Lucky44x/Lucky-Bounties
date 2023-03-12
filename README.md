@@ -1,4 +1,8 @@
 # Lucky-Bounties
+
+NOTE: This Readme is kind of outdated, however right now I'm too lazy to fix it
+ALSO: The last release on this Repository is v1.6, the Plugin is actually on version 2.7 now, please get the newest release on: https://www.spigotmc.org/resources/lucky-bounties.94149/
+
 Luckybounties is lightweight bounty plugin which let's your players set bounties on each other.
 My main goal with this plugin was to make it as user friendly as possible, so the entire bounty system is based on chest GUIs.
 To set a bounty you just have to type `/bounties` which will open the GUI:
