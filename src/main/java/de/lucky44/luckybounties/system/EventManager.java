@@ -1,5 +1,8 @@
 package de.lucky44.luckybounties.system;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.Town;
 import de.lucky44.api.luckybounties.events.BountyCollectEvent;
 import de.lucky44.luckybounties.LuckyBounties;
 import de.lucky44.luckybounties.chat.ChatManager;
@@ -28,6 +31,22 @@ public class EventManager implements Listener {
     public void onKill(PlayerDeathEvent e){
         Player killed = e.getEntity();
         Player killer = e.getEntity().getKiller();
+        Resident killedResident = TownyAPI.getInstance().getResident(killed);
+        Resident killerResident = TownyAPI.getInstance().getResident(killer);
+
+
+        if(killerResident.hasTown() && killedResident.hasTown()){
+            Town killedTown = killedResident.getTownOrNull();
+            Town killerTown = killerResident.getTownOrNull();
+            if(killerTown.isAlliedWith(killedTown) || killerTown.equals(killedTown)){
+                return;
+            }
+        }
+
+        if(killerResident.hasFriend(killedResident)){
+            return;
+        }
+
 
         if(killer == null || killer == killed)
             return;
