@@ -1,0 +1,76 @@
+{
+    "title": "LANG:GUI-return-buffer",
+    "type": "CHEST",
+    "size": 54,
+    "backfill": "backgroundItem",
+    "slots": [
+        {
+            "slot": 45,
+            "item": "backButton",
+            "button-tag": "previousPage"
+        },
+        {
+            "slot": 53,
+            "item": "nextButton",
+            "button-tag": "nextPage"
+        },
+        {
+            "slot": 48,
+            "item": "clearButton",
+            "button-tag": "clearBounties"
+        },
+        {
+            "slot": 49,
+            "item": "targetHead"
+        }
+    ],
+    "other": [
+        {
+            "type": "fill",
+            "item": "glassPane",
+            "start-slot": 46,
+            "end-slot": 52
+        },
+        {
+            "type": "paged-array",
+            "name": "bounties-array",
+            "generator-tag": "bountyItems",
+            "start-slot": 0,
+            "end-slot": 44,
+            "next-button-tag": "nextPage",
+            "back-button-tag": "previousPage",
+            "slot-button-tag": "bountyClicked"
+        }
+    ],
+    "items": [
+        {
+            "name": "backButton",
+            "type": "RED_STAINED_GLASS_PANE",
+            "title": "LANG:button-previous-page"
+        },
+        {
+            "name": "nextButton",
+            "type": "LIME_STAINED_GLASS_PANE",
+            "title": "LANG:button-next-page"
+        },
+        {
+            "name": "clearButton",
+            "type": "FEATHER",
+            "title": "LANG:button-clear-bounties"
+        },
+        {
+            "name": "targetHead",
+            "generator-tag": "targetHead"
+        },
+        {
+            "name": "backgroundItem",
+            "type": "AIR",
+            "title": ""
+        },
+        {
+            "name": "glassPane",
+            "type": "GRAY_STAINED_GLASS_PANE",
+            "title": ""
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+{
+    "title": "LANG:GUI-player-list",
+    "type": "CHEST",
+    "size": 54,
+    "backfill": "backgroundItem",
+    "slots": [
+        {
+            "slot": 45,
+            "item": "backButton",
+            "button-tag": "previousPage"
+        },
+        {
+            "slot": 53,
+            "item": "nextButton",
+            "button-tag": "nextPage"
+        }
+    ],
+    "items": [
+        {
+            "name": "backButton",
+            "type": "RED_STAINED_GLASS_PANE",
+            "title": "LANG:button-previous-page"
+        },
+        {
+            "name": "nextButton",
+            "type": "LIME_STAINED_GLASS_PANE",
+            "title": "LANG:button-next-page"
+        },
+        {
+            "name": "glassPane",
+            "title": "-",
+            "type": "GRAY_STAINED_GLASS_PANE"
+        },
+        {
+            "name": "backgroundItem",
+            "title": "",
+            "type": "AIR"
+        }
+    ],
+    "other": [
+        {
+            "type": "fill",
+            "item": "glassPane",
+            "start-slot": 46,
+            "end-slot": 52
+        },
+        {
+            "type": "paged-array",
+            "name": "player-array",
+            "generator-tag": "playerHeads",
+            "start-slot": 0,
+            "end-slot": 44,
+            "next-button-tag": "nextPage",
+            "back-button-tag": "previousPage",
+            "slot-button-tag": "headClicked"
+        }
+    ]
+}

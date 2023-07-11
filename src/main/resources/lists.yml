@@ -1,0 +1,7 @@
+blacklist:
+  - "command_block"
+  - "command_minecart"
+  - "barrier"
+
+whitelist:
+  - "diamond"

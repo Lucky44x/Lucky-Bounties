@@ -1,0 +1,109 @@
+{
+    "title": "LANG:GUI-bounties-list",
+    "type": "CHEST",
+    "size": 54,
+    "backfill": "backgroundItem",
+    "slots": [
+        {
+            "slot": 45,
+            "item": "backButton",
+            "button-tag": "previousPage"
+        },
+        {
+            "slot": 53,
+            "item": "nextButton",
+            "button-tag": "nextPage"
+        },
+        {
+            "slot": 8,
+            "item": "clearButton",
+            "button-tag": "clearBounties",
+            "condition": "opMode=1"
+        },
+        {
+            "slot": 4,
+            "item": "targetHead"
+        },
+        {
+            "slot": 13,
+            "item": "itemSetButton",
+            "condition": "economyMode=0",
+            "button-tag": "setItemBounty"
+        },
+        {
+            "slot": 13,
+            "item": "ecoSetButton",
+            "condition": "economyMode=2",
+            "button-tag": "setEcoBounty"
+        },
+        {
+            "slot": 12,
+            "item": "itemSetButton",
+            "condition": "economyMode=1",
+            "button-tag": "setItemBounty"
+        },
+        {
+            "slot": 14,
+            "item": "ecoSetButton",
+            "condition": "economyMode=1",
+            "button-tag": "setEcoBounty"
+        }
+    ],
+    "other": [
+        {
+            "type": "fill",
+            "item": "glassPane",
+            "start-slot": 46,
+            "end-slot": 52
+        },
+        {
+            "type": "paged-array",
+            "name": "bounties-array",
+            "generator-tag": "bountyItems",
+            "start-slot": 18,
+            "end-slot": 44,
+            "next-button-tag": "nextPage",
+            "back-button-tag": "previousPage",
+            "slot-button-tag": "bountyClicked"
+        }
+    ],
+    "items": [
+        {
+            "name": "backButton",
+            "type": "RED_STAINED_GLASS_PANE",
+            "title": "LANG:button-previous-page"
+        },
+        {
+            "name": "nextButton",
+            "type": "LIME_STAINED_GLASS_PANE",
+            "title": "LANG:button-next-page"
+        },
+        {
+            "name": "clearButton",
+            "type": "FEATHER",
+            "title": "LANG:button-clear-bounties"
+        },
+        {
+            "name": "targetHead",
+            "generator-tag": "targetHead"
+        },
+        {
+            "name": "backgroundItem",
+            "type": "AIR",
+            "title": ""
+        },
+        {
+            "name": "glassPane",
+            "type": "GRAY_STAINED_GLASS_PANE",
+            "title": " "
+        },
+        {
+            "name": "itemSetButton",
+            "generator-tag": "itemSetButton"
+        },
+        {
+            "name": "ecoSetButton",
+            "generator-tag": "ecoSetButton"
+        }
+    ]
+}

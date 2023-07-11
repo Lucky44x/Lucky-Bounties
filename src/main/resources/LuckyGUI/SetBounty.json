@@ -1,0 +1,44 @@
+{
+    "title": "LANG:GUI-set-bounty",
+    "type": "DISPENSER",
+    "backfill": "backgroundItem",
+    "slots": [
+        {
+            "slot": 4,
+            "item": "_CLEAR",
+            "unlocked": true,
+            "slot-tag": "BountyItem"
+        },
+        {
+            "slot": 6,
+            "item": "cancelButton",
+            "button-tag": "cancel"
+        },
+        {
+            "slot": 8,
+            "item": "confirmButton",
+            "button-tag": "confirm"
+        }
+    ],
+    "items": [
+        {
+            "name": "cancelButton",
+            "type": "RED_STAINED_GLASS_PANE",
+            "title": "LANG:button-cancel"
+        },
+        {
+            "name": "_CLEAR",
+            "type": "AIR"
+        },
+        {
+            "name": "confirmButton",
+            "type": "LIME_STAINED_GLASS_PANE",
+            "title": "LANG:button-confirm"
+        },
+        {
+            "name": "backgroundItem",
+            "title": "-",
+            "type": "GRAY_STAINED_GLASS_PANE"
+        }
+    ]
+}

@@ -1,0 +1,97 @@
+# Thank you for choosing LuckyBounties 3.x
+# Since the end of life of the 2.x versions, there have been some things which have been deprecated, so please be mindful of those
+# As with the previous versions, times in the config are given in this format: 1_d:1_h:1_m:1_s (mainly because I'm too lazy to rewrite that load system)
+# Keep in mind, that these times can be somewhat imprecise as they depend on a tick-rate of 20
+# The "time-format" option below follows the Java-Date-Time-Format (https://help.gooddata.com/cloudconnect/manual/date-and-time-format.html#date-format-pattern-syntax-in-java for reference)
+
+# When customizing the GUI-Files in the LuckyGUI directory, please refer to https://github.com/Lucky44x/Lucky-Bounties/wiki/How-do-I-...-%3F
+
+#=== Plugin related
+system-uuid: "5ddeb319-ce26-47fe-bb24-37be1a0232dc"
+
+#=== General
+time-format: "dd-MM-yyyy 'at' HH:mm z"
+return-removed-bounties: true
+setters-can-remove-bounties: true
+items-allowed: true
+self-bounty-allowed: false
+
+#=== GUIs
+eco-bounties-combined: true
+
+#=== SQL (only supports mysql for now, should work with mariadb)
+sql:
+  system: "MySQL"
+  enabled: false
+  host: "localhost"
+  database: "luckybounties"
+  port: 3306
+  username: root
+  password: root
+
+#=== Messages
+bounty-set-global: false
+bounty-take-global: false
+
+#=== Integrations / Extensions
+
+#= Filters (Whitelist OR Blacklist. The plugin will disable one if both are active)
+filters:
+  blacklist: false
+  whitelist: false
+
+#= Vanish
+vanish:
+  enabled: true
+  general-settings:
+    hide-from-everyone: true      #Even if players can see you while you are in vanish, they will not be able to see you in the GUI
+    do-metadata-check: true
+  integrations:
+    SuperVanish: false
+    PremiumVanish: false
+
+#= PAPI
+papi:
+  enabled: false
+
+#= Vault
+vault:
+  enabled: false
+  eco-item: GOLD_NUGGET
+  default-bounty: 100
+  minimum-bounty: 1             #Inclusive (bounty >= min-bounty)
+  maximum-bounty: 100           #Inclusive (bounty <= min-bounty)
+
+#= WorldGuard
+worldguard:
+  enabled: false
+  invis-region-op-bypass: false
+
+#== Expiring Bounties
+expire:
+  enabled: false
+  bounty-lifetime: 1_d
+  return-expired-bounties: true
+  periodical-check:
+    enabled: false
+    period: 10_m
+
+#= Cool down
+#Possible mode values ( 0 = Per target cooldown (all players have the same cooldown on one target), 1 = Per setter (each player has an individual cooldown on the same target))
+cooldown:
+  enabled: false
+  mode: 1
+  time: 15_s
+
+#= Towny
+towny:
+  enabled: false
+  friends-kill-ignored: false
+  ally-kill-ignored: false
+  same-town-kill-ignored: true
+  ally-set-allowed: true
+  same-town-set-allowed: true
+  friends-set-allowed: true
+
+#=== Bstats-metrics (disabling this makes it so no data is sent to bstats, which makes it harder for me to identify the spread of specific versions and problems in general)
+send-metrics: true

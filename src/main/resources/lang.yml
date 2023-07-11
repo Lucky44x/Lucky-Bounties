@@ -1,0 +1,61 @@
+#==== ERRORS
+missing-permission: "&c&lYou do not have the required permission for this"
+missing-set-permission: "&c&lYou are not allowed to set bounties"
+target-exempt: "&c&l[TARGET] is exempt from bounties"
+item-blacklisted: "&c&l[MATERIAL] is blacklisted"
+item-not-whitelisted: "&c&l[MATERIAL] is not whitelisted"
+eco-cannot-afford: "&c&lYou can not afford to set a bounty of [BOUNTY] on [TARGET]"
+eco-too-much: "&c&lYou can only set a maximum of [MAXBOUNTY]"
+eco-too-little: "&c&lYou can't set less than [MINBOUNTY]"
+eco-not-valid: "&c&l\"[INPUT]\" is not a valid number"
+cooldown-not-done: "&c&lYou can't already set a bounty again"
+region-flag-not-allowed: "&c&lYou aren't allowed to do this in this region"
+player-not-found: "&c&lCould not find player [NAME]"
+empty-hand: "&c&lYou aren't holding anything"
+items-disabled: "&c&lItem-Bounties are disabled"
+eco-disabled: "&c&lEconomy-Bounties is disabled"
+towny-same-town: "&c&lYou are in the same town as [TARGET]"
+towny-ally: "&c&l[TARGET] is your ally"
+towny-friends: "&c&l[TARGET] is your friend"
+self-set-disabled: "&c&lYou cannot set a bounty on yourself"
+
+#=== MESSAGES
+bounty-set-global: "<#ffa502[SETTER] has set a bounty of [COUNT] {[BOUNTY_TRANSLATABLE]:TRANSLATE:HOVER_SET} on [TARGET]#ff4757>"
+bounty-set-local: "<#ffa502Set a bounty of [COUNT] {[BOUNTY_TRANSLATABLE]:TRANSLATE:HOVER_SET} on [TARGET]#ff4757>"
+bounty-take-global: "<#ffa502[KILLER] has taken [TARGET]'s {bounties:HOVER_TAKE}#ff4757>"
+bounty-take-local: "<#ffa502You have taken [TARGET]'s {bounties:HOVER_TAKE}#ff4757>"
+bounty-take-hover-format:
+  - "&a&l[COUNT] [BOUNTY]"
+  - "&a&l[COUNT] [BOUNTY]"
+  - "&a&l[COUNT] [BOUNTY]"
+  - "&a&l[COUNT] [BOUNTY]"
+  - "..."
+
+#==== NOTIFICATIONS
+reload-complete: "&a&lPlugin has been reloaded"
+
+#==== UTIL
+system-bounty-name: "SYSTEM"
+
+#==== GUIS
+#== Items
+combined-eco-bounty-lore-line: "[BOUNTY] set by multiple people"
+eco-bounty-title: "&6[BOUNTY]"
+bounty-lore:
+  - "<#70a1ffSet by [SETTER] at [DATE]#5352ed>"
+
+#== Titles
+GUI-bounties-list: "&l[TARGET]'s bounties"
+GUI-set-bounty: "&lset bounty on [TARGET]"
+GUI-player-list: "&lPlayers"
+GUI-return-buffer: "&l[TARGET]'s return-buffer"
+
+#== Buttons
+button-player-head: "&7[TARGET]"
+button-confirm: "&aConfirm"
+button-cancel: "&cCancel"
+button-next-page: "&lNext Page"
+button-previous-page: "&lPrevious Page"
+button-clear-bounties: "&lClear [TARGET]'s bounties"
+button-set-bounty: "&lSet Bounty on [TARGET]"
+button-set-eco-bounty: "&lSet Eco-Bounty on [TARGET]"

@@ -1,0 +1,41 @@
+name: LuckyBounties
+version: 3.0.2
+main: com.github.lucky44x.luckybounties.LuckyBounties
+api-version: 1.13
+softdepend: [WorldGuard, Vault, PlaceholderAPI, SuperVanish, PremiumVanish, Towny]
+
+permissions:
+  lb.op:
+    default: op
+    description: Allows use of operator features of this plugin
+  lb.set:
+    default: true
+    description: Allows setting bounties
+  lb.remove:
+    default: true
+    description: Allows removing bounties
+  lb.exempt:
+    default: false
+    description: Exempts the player from being targeted by bounties
+  lb.reload:
+    default: op
+    description: Gives permission to reload the plugin
+  lb.data:
+    default: op
+    description: Gives permission to manage data (use /lb purgedata <handler | cooldown> to delete ALL the data) HANDLE WITH CARE
+  lb.drop:
+    default: true
+    description: Should bounties drop on death (Killed)
+  lb.kill:
+    default: true
+    description: Should bounties drop when killing someone (Killer)
+
+
+commands:
+  luckybounties:
+    aliases: lb
+    description: the operator command for LuckyBounties
+  bounties:
+    aliases: b
+    description: the bounties command
+    usage: /bounties
