@@ -591,6 +591,13 @@ public class PooledSQLBountyHandler extends BountyHandler {
 
     @Override
     public void clearBounties(Player target) {
+        if(instance.configFile.isReturnRemovedBounties()){
+            for(Bounty b : getBountiesByTarget(target)){
+                b.returnBounty();
+            }
+            return;
+        }
+
         try(Connection connection = this.pool.getConnection()) {
             try(PreparedStatement statement = connection.prepareStatement("DELETE FROM bounties WHERE " +
                     "target_uuid = ? " +

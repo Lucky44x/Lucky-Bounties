@@ -284,6 +284,11 @@ public class LocalBountyHandler extends BountyHandler {
         Bounty[] toRemove = getBountiesByTarget(target);
 
         for(Bounty b : toRemove){
+            if(instance.configFile.isReturnRemovedBounties()){
+                b.returnBounty();
+                continue;
+            }
+
             getTargetBountyList(target.getUniqueId()).remove(b);
             getSetterBountyList(b.getSetterID()).remove(b);
             if(b instanceof EcoBounty)
