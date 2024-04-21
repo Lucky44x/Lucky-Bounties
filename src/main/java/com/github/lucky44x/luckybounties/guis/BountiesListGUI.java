@@ -36,7 +36,7 @@ public class BountiesListGUI extends FileGUI {
 
         this.target = target;
 
-        if(instance.configFile.isVaultIntegration())
+        if(instance.getIntegrationManager().isEconomyActive())
             ecoMode ++;
         if(!instance.configFile.isItemsEnabled())
             ecoMode++;
@@ -80,7 +80,16 @@ public class BountiesListGUI extends FileGUI {
     }
 
     @GUITag("setItemBounty")
-    public void setItemBounty(){
+    public void setItemBounty(InventoryClickEvent event){
+
+        ItemStack stack = inventory.getItem(event.getSlot());
+        if(stack == null)
+            return;
+
+        if(stack.hasItemMeta() && stack.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
+            return;
+        }
+
         try {
             new SetBountyGUI((LuckyBounties) instance, user, target);
         } catch (FileNotFoundException e) {
@@ -89,8 +98,21 @@ public class BountiesListGUI extends FileGUI {
     }
 
     @GUITag("setEcoBounty")
-    public void setEcoBounty(){
-        new SetEcoBountyGUI(user, ((LuckyBounties)instance), target);
+    public void setEcoBounty(InventoryClickEvent event){
+
+        ItemStack stack = inventory.getItem(event.getSlot());
+        if(stack == null)
+            return;
+
+        if(stack.hasItemMeta() && stack.getItemMeta().hasItemFlag(ItemFlag.HIDE_UNBREAKABLE)){
+            return;
+        }
+        try{
+            new SetEcoBountyGUI(((LuckyBounties)instance), user, target);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //region bountyItems
@@ -135,10 +157,10 @@ public class BountiesListGUI extends FileGUI {
 
     @LangConfig.LangData(langKey = "[BOUNTY]")
     public String getCombinedEcoAmount(){
-        if(!((LuckyBounties)instance).getIntegrationManager().isIntegrationActive("VAULT"))
+        if(!((LuckyBounties)instance).getIntegrationManager().isEconomyActive())
             return String.valueOf(((LuckyBounties)instance).getHandler().getEcoAmount(target));
         else
-            return ((LuckyBounties)instance).getIntegrationManager().getIntegration("VAULT", VaultPluginIntegration.class).format(
+            return ((LuckyBounties)instance).getIntegrationManager().getEconomyHandler().format(
                     ((LuckyBounties)instance)
                             .getHandler()
                             .getEcoAmount(target)
@@ -188,6 +210,7 @@ public class BountiesListGUI extends FileGUI {
             meta.setDisplayName(
                     ((LuckyBounties)instance).langFile.getText("self-set-disabled", this)
             );
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             button.setItemMeta(meta);
             return button;
         }
@@ -196,6 +219,7 @@ public class BountiesListGUI extends FileGUI {
             meta.setDisplayName(
                     ((LuckyBounties)instance).langFile.getText("target-exempt", this)
             );
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             button.setItemMeta(meta);
             return button;
         }
@@ -204,6 +228,7 @@ public class BountiesListGUI extends FileGUI {
             meta.setDisplayName(
                     ((LuckyBounties)instance).langFile.getText("missing-set-permission", this)
             );
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
             button.setItemMeta(meta);
             return button;
         }
@@ -214,6 +239,9 @@ public class BountiesListGUI extends FileGUI {
                meta.setDisplayName(
                        ((LuckyBounties)instance).langFile.getText("cooldown-not-done", this, cooldownExtension)
                );
+                meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+                button.setItemMeta(meta);
+                return button;
             }
         }
 

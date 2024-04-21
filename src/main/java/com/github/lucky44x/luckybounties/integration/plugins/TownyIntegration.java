@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 
 /**
  * Courtesy of ItsJules
- * TownyIntegration - original code by ItsJules, migrated to LuckyBounties 3.0 by Nick Balischewski
+ * TownyIntegration - original code by ItsJules, migrated to LuckyBounties 3.0 by Lucky44x
  * @author ItsJules
  * @author Nick Balischewski
  */

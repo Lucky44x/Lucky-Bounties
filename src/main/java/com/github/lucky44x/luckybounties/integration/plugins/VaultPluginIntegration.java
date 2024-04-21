@@ -3,6 +3,7 @@ package com.github.lucky44x.luckybounties.integration.plugins;
 import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.abstraction.bounties.Bounty;
 import com.github.lucky44x.luckybounties.abstraction.integration.ConditionPluginIntegration;
+import com.github.lucky44x.luckybounties.abstraction.integration.EconomyHandler;
 import com.github.lucky44x.luckybounties.abstraction.integration.exception.IntegrationException;
 import com.github.lucky44x.luckybounties.bounties.types.EcoBounty;
 import com.github.lucky44x.luckyutil.config.LangConfig;
@@ -11,9 +12,12 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class VaultPluginIntegration extends ConditionPluginIntegration {
+/**
+ * @author Lucky44x
+ * EconomyHandler for Vault (for specific info on functions refer to the coinsengine handler, since I'm too lazy to rewrite all this stuff)
+ */
+public class VaultPluginIntegration extends ConditionPluginIntegration implements EconomyHandler {
     private Economy economy;
-
     public VaultPluginIntegration(LuckyBounties instance) {
         super(instance, "Vault");
     }

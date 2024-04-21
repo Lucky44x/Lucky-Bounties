@@ -17,7 +17,7 @@ public class SetEcoBountyGUI extends AnvilGUI {
     @LangConfig.LangData(langKey = "[TARGET]", stringMethodNames = "getName")
     private final Player target;
 
-    public SetEcoBountyGUI(Player user, LuckyBounties instance, Player target) {
+    public SetEcoBountyGUI(LuckyBounties instance, Player user, Player target) {
         super(user, "NAN", instance);
         this.target = target;
         this.title = instance.langFile.getText("GUI-set-bounty", this);

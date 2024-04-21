@@ -7,7 +7,8 @@ import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 import org.mariadb.jdbc.Driver;
 
-@Getter public class LuckyBountiesConfig extends AutomatedConfig {
+@Getter
+public class LuckyBountiesConfig extends AutomatedConfig {
 
     private final String[] supportedSQLDrivers = new String[]{
             "mysql",
@@ -54,6 +55,9 @@ import org.mariadb.jdbc.Driver;
     @ConfigData(tag="vault.enabled")
     private boolean vaultIntegration = false;
 
+    @ConfigData(tag="coins-engine.enabled")
+    private boolean coinsEngineIntegration = false;
+
     @ConfigData(tag="papi.enabled")
     private boolean papiIntegration = false;
 
@@ -73,19 +77,23 @@ import org.mariadb.jdbc.Driver;
     private boolean premiumVanishEnabled = false;
     //endregion
 
-    //region vault settings
-    @ConfigData(tag="vault.default-bounty")
+    //region Eco settings
+    @ConfigData(tag="economy.default-bounty")
     private double defaultEcoBounty = 0;
 
-    @ConfigData(tag="vault.minimum-bounty")
+    @ConfigData(tag="economy.minimum-bounty")
     private double minimumEcoBounty = 0;
 
-    @ConfigData(tag="vault.maximum-bounty")
+    @ConfigData(tag="economy.maximum-bounty")
     private double maximumEcoBounty = 0;
 
-    @ConfigData(tag="vault.eco-item")
+    @ConfigData(tag="economy.eco-item")
     private String ecoItem = "GOLD_NUGGET";
     //endregion
+
+    //region CoinsEngine settings
+    @ConfigData(tag="coins-engine.economy-name")
+    private String economyName;
 
     //region WorldGuard
     @ConfigData(tag="worldguard.enabled")

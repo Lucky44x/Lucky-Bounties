@@ -24,6 +24,10 @@ import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Lucky44x
+ * Migrator class for automatically upgrading 2.0 data to the new 3.0 standart
+ */
 public class Migrator {
 
     private final LuckyBounties instance;
@@ -62,11 +66,15 @@ public class Migrator {
 
         if(directory != oldDataFolder){
             if(!directory.renameTo(oldDataFolder))
-                instance.getLogger().warning("Could not rename old LuckyBounties folder which can result in errors occuring, please manually rename the folder to \"LuckyBountiesOLD\" and reload before trying to migrate version 2.0 data to newer versions");
+                instance.getLogger().warning("Could not rename old LuckyBounties folder which can result in errors occuring, please manually rename the folder to \"LuckyBountiesOLD\" and restart before trying to migrate version 2.0 data to newer versions");
         }
         hasOldData = true;
     }
 
+    /**
+     * Confirms the decision to migrate all data. Is called via command, and essentially logs progress through chat
+     * @param sender the CommandSender which to send logs to
+     */
     public void migrate(CommandSender sender){
 
         sender.sendMessage(ChatColor.GOLD + "Trying to transfer old bounty-data");
@@ -103,6 +111,12 @@ public class Migrator {
         }
     }
 
+    /**
+     * reads all bounties from the old data-folder
+     * @return an array of upgraded Bounties
+     * @throws IOException when something goes wrong
+     * @throws ClassNotFoundException ? (idk when this gets thrown...)
+     */
     private Bounty[] readBounties() throws IOException, ClassNotFoundException {
         List<Bounty> bounties = new ArrayList<>();
 
@@ -166,6 +180,12 @@ public class Migrator {
         return bounties.toArray(Bounty[]::new);
     }
 
+    /**
+     * Upgrades the return buffer stuff
+     * @return an array of upgraded bounties which were saved as the return buffer
+     * @throws IOException when the file is not found
+     * @throws ClassNotFoundException (idk)
+     */
     private Bounty[] readReturnBuffer() throws IOException, ClassNotFoundException {
         List<Bounty> bounties = new ArrayList<>();
 
@@ -229,6 +249,9 @@ public class Migrator {
         return bounties.toArray(Bounty[]::new);
     }
 
+    /**
+     * @return a map of UserStats mapped to UUIDs
+     */
     private Map<UUID, UserStats> readUsers(){
         Map<UUID, UserStats> stats = new HashMap<>();
 
@@ -250,6 +273,10 @@ public class Migrator {
         return stats;
     }
 
+    /**
+     * Just gets a JSON array
+     * @return a JsonArray
+     */
     private JsonArray getObject(){
         File playerDataFile = new File("plugins\\LuckyBountiesOLD\\playerData.json");
         try(FileReader reader = new FileReader(playerDataFile)){
@@ -261,6 +288,12 @@ public class Migrator {
         }
     }
 
+    /**
+     * Reads a String from an inputstream
+     * @param inputStream the inputstream to be read from
+     * @return the read string
+     * @throws IOException should the file not exists
+     */
     private String readFromInputStream(InputStream inputStream) throws IOException {
         StringBuilder resultStringBuilder = new StringBuilder();
         try (BufferedReader br

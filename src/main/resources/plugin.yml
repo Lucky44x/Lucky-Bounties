@@ -2,7 +2,8 @@ name: LuckyBounties
 version: 3.0.2
 main: com.github.lucky44x.luckybounties.LuckyBounties
 api-version: 1.13
-softdepend: [WorldGuard, Vault, PlaceholderAPI, SuperVanish, PremiumVanish, Towny]
+softdepend: [WorldGuard, Vault, PlaceholderAPI, SuperVanish, PremiumVanish, Towny, CoinsEngine]
+author: Lucky44
 
 permissions:
   lb.op:

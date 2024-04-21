@@ -17,6 +17,10 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ * a WorldGuard integration
+ */
 @LBIntegration(value = LBIntegration.LoadTime.LOAD, errorMessage = "Worldguard-Integration has to be loaded at startup")
 public class WorldGuardIntegration extends ConditionPluginIntegration {
     private StateFlag lbEnabled, setAllowed, removeAllowed, drop, exempt, invisible;
@@ -75,6 +79,11 @@ public class WorldGuardIntegration extends ConditionPluginIntegration {
         return checkStateFlag(killed, drop) && checkStateFlag(killer, drop);
     }
 
+    /**
+     * Checks if the StateFlag LB is enabled
+     * @param p the player
+     * @return true when enabled, false when not
+     */
     public boolean isLBEnabled(Player p){
         return checkStateFlag(p, lbEnabled);
     }
@@ -82,6 +91,13 @@ public class WorldGuardIntegration extends ConditionPluginIntegration {
     public boolean isExempt(Player p){return checkStateFlag(p, exempt);}
     public boolean isSetAllowed(Player p){return checkStateFlag(p, setAllowed);}
 
+    /**
+     * registers a flag
+     * @param name the name of the flag
+     * @param defaultVal the default value of the flag
+     * @return the generated StateFlag
+     * @throws IntegrationException when the flag registering fails
+     */
     private StateFlag registerFlag(String name, boolean defaultVal) throws IntegrationException {
         try{
             StateFlag flag = new StateFlag(name, defaultVal);
@@ -98,12 +114,26 @@ public class WorldGuardIntegration extends ConditionPluginIntegration {
             }
         }
     }
+
+    /**
+     * Checks weather or not a StateFlag is enabled
+     * @param p the player
+     * @param flag the StateFlag
+     * @return true, when active, false if not
+     */
     private boolean checkStateFlag(Player p, StateFlag flag){
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(p);
         ApplicableRegionSet set = getSet(localPlayer);
 
         return set.testState(localPlayer, flag);
     }
+
+    /**
+     * checks if multiple states are active
+     * @param p the player
+     * @param flags the flags
+     * @return an array of boolean corresponding to their active state
+     */
     private boolean[] checkStates(Player p, StateFlag[] flags){
         LocalPlayer localPlayer = WorldGuardPlugin.inst().wrapPlayer(p);
         ApplicableRegionSet set = getSet(localPlayer);
@@ -115,6 +145,12 @@ public class WorldGuardIntegration extends ConditionPluginIntegration {
 
         return ret;
     }
+
+    /**
+     * gets a regionset for the player p
+     * @param p the player
+     * @return a ApplicableRegionSet for the player p
+     */
     private ApplicableRegionSet getSet(LocalPlayer p){
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();

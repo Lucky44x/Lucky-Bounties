@@ -9,6 +9,10 @@ import com.github.lucky44x.luckybounties.bounties.types.ItemBounty;
 import com.github.lucky44x.luckyutil.config.LangConfig;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ * A simple BlackList-Extension for blacklisting items
+ */
 public class BlacklistExtension extends FilterExtension {
     public BlacklistExtension(LuckyBounties instance) {
         super(instance, "blacklist");

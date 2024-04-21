@@ -1,11 +1,13 @@
 package com.github.lucky44x.luckybounties.commands;
 
+import com.github.lucky44x.gui.FileGUI;
 import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.bounties.handlers.LocalBountyHandler;
 import com.github.lucky44x.luckybounties.bounties.handlers.PooledSQLBountyHandler;
 import com.github.lucky44x.luckybounties.guis.ReturnBufferGUI;
 import com.github.lucky44x.luckybounties.integration.extensions.CooldownExtension;
 import com.github.lucky44x.luckyutil.config.LangConfig;
+import com.github.lucky44x.luckyutil.plugin.LuckyPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -14,6 +16,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginDescriptionFile;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -127,6 +130,19 @@ public class OperatorCommands implements CommandExecutor, TabCompleter {
                     case("tick") -> sender.sendMessage(String.valueOf(instance.configFile.toTickTime(args[2])));
                     case("milli") -> sender.sendMessage(String.valueOf(instance.configFile.toMillisecTime(args[2])));
                 }
+            }
+            case("dump") -> {
+                sender.sendMessage(
+                        "Server Version: " + Bukkit.getBukkitVersion(),
+                        "Plugin-API Version: " + instance.getDescription().getAPIVersion(),
+                        "Plugin Version: " + instance.getDescription().getVersion(),
+                        "Lucky-GUI Version: " + FileGUI.class.getPackage().getImplementationVersion(),
+                        "Lucky-Util Version: " + LuckyPlugin.class.getPackage().getImplementationVersion(),
+                        "Bounty-Handler: " + instance.getHandler().getClass().getSimpleName(),
+                        "Economy-Handler: " + (instance.getIntegrationManager().isEconomyActive() ? instance.getIntegrationManager().getEconomyHandler() : "Disabled"),
+                        "Integrations: \n " + instance.getIntegrationManager().getIntegrationString(),
+                        "Conditions: \n " + instance.getConditionManager().getConditionString()
+                );
             }
             case("transfer") -> {
 

@@ -19,6 +19,7 @@ import com.github.lucky44x.luckybounties.commands.OperatorCommands;
 import com.github.lucky44x.luckybounties.config.LuckyBountiesConfig;
 import com.github.lucky44x.luckybounties.events.KillEvent;
 import com.github.lucky44x.luckybounties.events.JoinEvent;
+import com.github.lucky44x.luckybounties.integration.plugins.CoinsEngineIntegration;
 import com.github.lucky44x.luckybounties.integration.IntegrationManager;
 import com.github.lucky44x.luckybounties.integration.extensions.BlacklistExtension;
 import com.github.lucky44x.luckybounties.integration.extensions.CooldownExtension;
@@ -47,6 +48,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+//TODO: priority 0 update the GUI stuff (especially the AnvilGUI) to the newest mc version (makes no sense to put this here, since that has to be done in the LuckyGUI project, but I'll forget otherwise)
+//TODO: priority 1, add more documentation
+//TODO: priority 1 Rewrite the expired bounties system
+
+/**
+ * @author Lucky44x
+ * The main instance of the plugin
+ */
 public final class LuckyBounties extends JavaPlugin {
 
     @Getter
@@ -61,7 +70,7 @@ public final class LuckyBounties extends JavaPlugin {
     };
 
     @Getter
-    private final Migrator migrationHelper = new Migrator(this);
+    private Migrator migrationHelper;
     @Getter
     private BountyHandler handler;
     @Getter
@@ -80,6 +89,10 @@ public final class LuckyBounties extends JavaPlugin {
 
     @Override
     public void onLoad(){
+
+        getLogger().info("Initializing Migrationhelper");
+        migrationHelper = new Migrator(this);
+
         getLogger().info("Loading Config and Lang");
         //Save config and lang
         configFile.saveDefault();
@@ -99,7 +112,7 @@ public final class LuckyBounties extends JavaPlugin {
             this.metrics = new Metrics(this, 12684);
         }
         else{
-            getLogger().info("Metrics, are disabled");
+            getLogger().info("Metrics are disabled");
             this.metrics = null;
         }
 
@@ -107,10 +120,11 @@ public final class LuckyBounties extends JavaPlugin {
         //Create handler
         if(configFile.isSqlEnabled()){
             if(!configFile.isSQLModeValid()){
-                getLogger().warning("Falling back to a local-handler-instance");
+                getLogger().warning("Specified SQL mode invalid, falling back to a local-handler-instance");
                 handler = new LocalBountyHandler(this);
             }
             else{
+                getLogger().info("Creating SQL based bounties-handler");
                 handler = new PooledSQLBountyHandler(this,
                         configFile.getSqlHostName(),
                         configFile.getSqlPort(),
@@ -120,6 +134,7 @@ public final class LuckyBounties extends JavaPlugin {
             }
         }
         else{
+            getLogger().info("Creating local-handler");
             handler = new LocalBountyHandler(this);
         }
 
@@ -127,7 +142,7 @@ public final class LuckyBounties extends JavaPlugin {
         //Register Conditions to conditionManager
         conditionManager.registerCondition(new PermissionsCondition(this));
 
-        getLogger().info("Initializing Load-Integrations");
+        getLogger().info("Initializing Load-Time-Integrations");
         //Reload Integrations
         reloadIntegrations(LBIntegration.LoadTime.LOAD, true);
     }
@@ -135,6 +150,16 @@ public final class LuckyBounties extends JavaPlugin {
     @Override
     public void onEnable(){
         final long startupTime = System.nanoTime();
+
+        System.out.println("\n" +
+                "  ___               __          _______                   __   __             \n" +
+                " |   |  .--.--.----|  |--.--.--|   _   .-----.--.--.-----|  |_|__.-----.-----.\n" +
+                " |.  |  |  |  |  __|    <|  |  |.  1   |  _  |  |  |     |   _|  |  -__|__ --|\n" +
+                " |.  |__|_____|____|__|__|___  |.  _   |_____|_____|__|__|____|__|_____|_____|\n" +
+                " |:  1   |               |_____|:  1    \\                                     \n" +
+                " |::.. . |                     |::.. .  /                                     \n" +
+                " `-------'                     `-------'\n" +
+                "\n");
 
         getLogger().info("Initializing Runtime-Integrations");
         reloadIntegrations(LBIntegration.LoadTime.RUNTIME, true);
@@ -165,6 +190,11 @@ public final class LuckyBounties extends JavaPlugin {
         getLogger().info("Enabled plugin in " + (System.nanoTime() - startupTime) / 1000000 + " ms");
     }
 
+    /**
+     * Reloads the all config and gui data and sends a chat based response to sender
+     * Will also call the reload function of any runtime-integrations
+     * @param sender the CommandSender which should get a response
+     */
     public void reloadPlugin(CommandSender sender){
         FileGUI.clearGUIData();
         configFile.reload();
@@ -193,58 +223,71 @@ public final class LuckyBounties extends JavaPlugin {
         sender.sendMessage(langFile.getText("reload-complete", this));
     }
 
-    private void reloadIntegrations(LBIntegration.LoadTime time, boolean supressMessage){
+    /**
+     * Reloads all integrations with the specified load-time. Should suppressMessage be set to true, no errors or warnings will be logged
+     * @param time the specified load-time of the integrations which should be reloaded
+     * @param suppressMessage should error and warning messages be suppressed?
+     */
+    private void reloadIntegrations(LBIntegration.LoadTime time, boolean suppressMessage){
         //Check VAULT integration
         integrationManager.registerOrUnregisterIntegration(
-                "VAULT", configFile.isVaultIntegration(), VaultPluginIntegration.class, time, supressMessage
+                "VAULT", configFile.isVaultIntegration(), VaultPluginIntegration.class, time, suppressMessage
+        );
+
+        //Check COINS-ENGINE integration
+        integrationManager.registerOrUnregisterIntegration(
+                "COINS", configFile.isCoinsEngineIntegration(), CoinsEngineIntegration.class, time, suppressMessage
         );
 
         //Check PAPI integration
         integrationManager.registerOrUnregisterIntegration(
-                "PAPI", configFile.isPapiIntegration(), PapiIntegration.class, time, supressMessage
+                "PAPI", configFile.isPapiIntegration(), PapiIntegration.class, time, suppressMessage
         );
 
         //Check expired-bounties-checker extension
         integrationManager.registerOrUnregisterIntegration(
-                "EBCex", configFile.isExpiredBountiesCheck(), ExpiredBountiesChecker.class, time, supressMessage
+                "EBCex", configFile.isExpiredBountiesCheck(), ExpiredBountiesChecker.class, time, suppressMessage
         );
 
         //Check Whitelist
         integrationManager.registerOrUnregisterIntegration(
-                "WHLex", configFile.isWhitelistActive(), WhitelistExtension.class, time, supressMessage
+                "WHLex", configFile.isWhitelistActive(), WhitelistExtension.class, time, suppressMessage
         );
 
         //Check Blacklist
         integrationManager.registerOrUnregisterIntegration(
-                "BLLex", configFile.isBlacklistActive(), BlacklistExtension.class, time, supressMessage
+                "BLLex", configFile.isBlacklistActive(), BlacklistExtension.class, time, suppressMessage
         );
 
         //Check Cooldown
         integrationManager.registerOrUnregisterIntegration(
-                "COLex", configFile.isCooldownEnabled(), CooldownExtension.class, time, supressMessage
+                "COLex", configFile.isCooldownEnabled(), CooldownExtension.class, time, suppressMessage
         );
 
         //Check Vanish Integration
         integrationManager.registerOrUnregisterIntegration(
-                "VANex", configFile.isVanishEnabled(), VanishIntegration.class, time, supressMessage
+                "VANex", configFile.isVanishEnabled(), VanishIntegration.class, time, suppressMessage
         );
 
         //Check Super/Premium Vanish Integration
         integrationManager.registerOrUnregisterIntegration(
-                "SUVANex", configFile.isSuperVanishEnabled(), SuperPremiumVanishIntegration.class, time, supressMessage
+                "SUVANex", configFile.isSuperVanishEnabled(), SuperPremiumVanishIntegration.class, time, suppressMessage
         );
 
         //Check WorldGuard Integration
         integrationManager.registerOrUnregisterIntegration(
-                "WGex", configFile.isWorldGuardEnabled(), WorldGuardIntegration.class, time, supressMessage
+                "WGex", configFile.isWorldGuardEnabled(), WorldGuardIntegration.class, time, suppressMessage
         );
 
         //Check Towny Integration
         integrationManager.registerOrUnregisterIntegration(
-                "TWAex", configFile.isTownyEnabled(), TownyIntegration.class, time, supressMessage
+                "TWAex", configFile.isTownyEnabled(), TownyIntegration.class, time, suppressMessage
         );
     }
 
+    /**
+     * Reloads the Handler, local or SQL
+     */
     private void reloadHandler(){
         if(configFile.isSqlEnabled()){
             if(!configFile.isSQLModeValid())
@@ -277,12 +320,18 @@ public final class LuckyBounties extends JavaPlugin {
         }
     }
 
+    /**
+     * Saves a copy of the default configuration for all File-GUIs
+     */
     private void saveGUIs(){
         for(String guiName : GUINames){
             FileGUI.saveDefaultGUI(guiName, this);
         }
     }
 
+    /**
+     * Deletes all old gui-files and calls saveGUIs
+     */
     public void updateGUIs() {
         for(String guiName : GUINames){
             File f = new File(getDataFolder() + "/LuckyGUI/" + guiName + ".json");
@@ -304,14 +353,35 @@ public final class LuckyBounties extends JavaPlugin {
         handler.disableHandler();
     }
 
+    /**
+     * Sets an Item-Bounty with the specified parameters, by creating a new item-bounty and calling setBounty(Bounty b, [...])
+     * @param reward the reward which should be linked to this bounty
+     * @param target the target of the bounty
+     * @param setter the Player who set the bounty
+     * @return true, if the bounty-set was successful and false, should it fail
+     */
     public boolean setBounty(ItemStack reward, Player target, Player setter){
         return setBounty(new ItemBounty(reward, target, setter, this), target, setter);
     }
 
+    /**
+     * Sets an Eco-Bounty with the specified parameters, by creating a new eco-bounty and calling setBounty(Bounty b, [...])
+     * @param reward the amount in the configured currency
+     * @param target the target of the bounty
+     * @param setter the Player who set the bounty
+     * @return true, if the bounty-set was successful and false, should it fail
+     */
     public boolean setBounty(double reward, Player target, Player setter){
         return setBounty(new EcoBounty(reward, target, setter, this), target, setter);
     }
 
+    /**
+     * Handles the logic for adding  a bounty-object to a player
+     * @param b the bounty-object-instance which should be added
+     * @param target the target
+     * @param setter the Player who set the bounty
+     * @return true, if the bounty-set was successful and false, should it fail
+     */
     private boolean setBounty(Bounty b, Player target, Player setter){
         if(!conditionManager.isAllowedToSet(b, target, setter))
             return false;
@@ -321,11 +391,11 @@ public final class LuckyBounties extends JavaPlugin {
         if(event.isCancelled())
             return false;
 
-        if(b instanceof EcoBounty && integrationManager.isIntegrationActive("VAULT")){
-            integrationManager.getIntegration("VAULT", VaultPluginIntegration.class).withdraw(setter, ((EcoBounty) b).getReward());
+        if(b instanceof EcoBounty && integrationManager.isEconomyActive()){
+            integrationManager.getEconomyHandler().withdraw(setter, ((EcoBounty) b).getReward());
         }
-        else if(b instanceof EcoBounty && !integrationManager.isIntegrationActive("VAULT")){
-           getLogger().warning("Could not withdraw " + ((EcoBounty)b).getReward() + " eco from " + setter.getName() + " -> Vault not enabled");
+        else if(b instanceof EcoBounty){
+           getLogger().warning("Could not withdraw " + ((EcoBounty)b).getReward() + " eco from " + setter.getName() + " -> Economy not enabled");
         }
 
         handler.addBounty(b);
@@ -337,6 +407,13 @@ public final class LuckyBounties extends JavaPlugin {
         return true;
     }
 
+    /**
+     * Removes a specified bounty from a player
+     * @param bounty the bounty to be removed
+     * @param caller the Player who 'called' the function (usually the gui user)
+     * @param returnToCaller should the reward be returned to the caller, instead of the setter
+     * @return true if the removal was successful, false should it fail
+     */
     public boolean removeBounty(Bounty bounty, Player caller, boolean returnToCaller){
         if(!conditionManager.isAllowedToRemove(bounty, caller))
             return false;
@@ -368,6 +445,12 @@ public final class LuckyBounties extends JavaPlugin {
         return true;
     }
 
+    /**
+     * Returns an array of Players, containing all online players, while filtering out all players who "cannot be seen"
+     * (i.e. vanish) by the "requesting" player
+     * @param requester the player requesting the array (usually the gui user)
+     * @return an array of online players who are visible to the requester
+     */
     public Player[] getOnlinePlayers(Player requester){
         List<Player> players = new ArrayList<>();
 

@@ -69,10 +69,10 @@ public class ReturnBufferGUI extends FileGUI {
 
     @LangConfig.LangData(langKey = "[BOUNTY]")
     public String getCombinedEcoAmount(){
-        if(!((LuckyBounties)instance).getIntegrationManager().isIntegrationActive("VAULT"))
+        if(!((LuckyBounties)instance).getIntegrationManager().isEconomyActive())
             return String.valueOf(((LuckyBounties)instance).getHandler().getEcoAmount(target.getUniqueId()));
         else
-            return ((LuckyBounties)instance).getIntegrationManager().getIntegration("VAULT", VaultPluginIntegration.class).format(
+            return ((LuckyBounties)instance).getIntegrationManager().getEconomyHandler().format(
                     ((LuckyBounties)instance)
                             .getHandler()
                             .getEcoAmount(target.getUniqueId())

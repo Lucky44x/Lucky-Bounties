@@ -9,6 +9,10 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * @author Lucky44x
+ * a simple cooldown extension for adding this behaviour to the setting system
+ */
 public class CooldownExtension extends ConditionIntegration {
     private final HashMap<UUID, HashMap<UUID, Long>> cooldownMap = new HashMap<>();
 
@@ -47,6 +51,11 @@ public class CooldownExtension extends ConditionIntegration {
         return true;
     }
 
+    /**
+     * Updates the cooldown to the specified values when setting bounties
+     * @param target the target of the bounty - set
+     * @param setter the setter of the bounty - set
+     */
     public void setCooldown(UUID target, UUID setter){
         if(instance.configFile.getCooldownMode() == 0)
             cooldownMap.computeIfAbsent(target, k -> new HashMap<>()).put(target, System.currentTimeMillis());
@@ -54,6 +63,11 @@ public class CooldownExtension extends ConditionIntegration {
             cooldownMap.computeIfAbsent(target, k -> new HashMap<>()).put(setter, System.currentTimeMillis());
     }
 
+    /**
+     * Resets the cooldown-values for the given bounty-set action
+     * @param target the target of the bounty-set
+     * @param setter the setter of the bounty-set
+     */
     public void resetCooldown(UUID target, UUID setter){
         if(instance.configFile.getCooldownMode() == 0)
             cooldownMap.computeIfAbsent(target, k -> new HashMap<>()).put(setter, 0L);
@@ -61,6 +75,9 @@ public class CooldownExtension extends ConditionIntegration {
             cooldownMap.computeIfAbsent(target, k -> new HashMap<>()).put(setter, 0L);
     }
 
+    /**
+     * drops (deletes) all data this object was holding
+     */
     public void dropData(){
         cooldownMap.clear();
     }

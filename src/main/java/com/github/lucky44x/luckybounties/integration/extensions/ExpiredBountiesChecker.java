@@ -5,6 +5,10 @@ import com.github.lucky44x.luckybounties.abstraction.integration.Integration;
 import com.github.lucky44x.luckybounties.abstraction.integration.exception.IntegrationException;
 import org.bukkit.Bukkit;
 
+/**
+ * @author Lucky44x
+ * No idea what any of this does and I can't be bothered to think about it, or a better way to do this at that, so yeah...
+ */
 //ASYNC PAIN TODO: make this shit threadsafe
 public class ExpiredBountiesChecker extends Integration {
 

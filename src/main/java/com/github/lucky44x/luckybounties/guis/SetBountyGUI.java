@@ -9,6 +9,8 @@ import java.io.FileNotFoundException;
 
 public class SetBountyGUI extends FileGUI {
 
+    private boolean setBountyConfirmed = false;
+
     @LangConfig.LangData(langKey="[TARGET]", stringMethodNames="getName")
     private final Player target;
 
@@ -20,6 +22,7 @@ public class SetBountyGUI extends FileGUI {
 
     @GUITag("cancel")
     public void cancelSetBounty(){
+        /*
         if(getItem("BountyItem") != null){
             if(user.getInventory().firstEmpty() == -1){
                 user.getWorld().dropItemNaturally(user.getLocation(), getItem("BountyItem"));
@@ -28,6 +31,7 @@ public class SetBountyGUI extends FileGUI {
                 user.getInventory().addItem(getItem("BountyItem"));
             }
         }
+        */
 
         try{
             new BountiesListGUI((LuckyBounties) instance, user, target);
@@ -46,10 +50,27 @@ public class SetBountyGUI extends FileGUI {
             return;
         }
 
+        setBountyConfirmed = true;
+
         try{
             new BountiesListGUI((LuckyBounties) instance, user, target);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onClose(){
+        if(getItem("BountyItem") == null || setBountyConfirmed)
+            return;
+
+        if(getItem("BountyItem") != null){
+            if(user.getInventory().firstEmpty() == -1){
+                user.getWorld().dropItemNaturally(user.getLocation(), getItem("BountyItem"));
+            }
+            else{
+                user.getInventory().addItem(getItem("BountyItem"));
+            }
         }
     }
 }

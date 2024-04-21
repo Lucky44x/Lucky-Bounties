@@ -54,13 +54,21 @@ vanish:
 papi:
   enabled: false
 
-#= Vault
-vault:
-  enabled: false
+#= General Economy (enable vault or coins engine, to activate their respective handlers)
+economy:
   eco-item: GOLD_NUGGET
   default-bounty: 100
   minimum-bounty: 1             #Inclusive (bounty >= min-bounty)
   maximum-bounty: 100           #Inclusive (bounty <= min-bounty)
+
+#= CoinsEngine
+coins-engine:
+  enabled: false
+  economy-name: "TMP"
+
+#= Vault
+vault:
+  enabled: false
 
 #= WorldGuard
 worldguard:

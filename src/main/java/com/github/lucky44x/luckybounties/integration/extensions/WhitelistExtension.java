@@ -8,6 +8,10 @@ import com.github.lucky44x.luckybounties.bounties.types.ItemBounty;
 import com.github.lucky44x.luckyutil.config.LangConfig;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ * a simple Whitelist extension for whitelisting items
+ */
 public class WhitelistExtension extends FilterExtension {
     public WhitelistExtension(LuckyBounties instance) {
         super(instance, "whitelist");

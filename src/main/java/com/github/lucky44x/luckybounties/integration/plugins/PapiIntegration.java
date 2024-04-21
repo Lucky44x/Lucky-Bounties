@@ -8,6 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Lucky44x
+ * Simple PAPI integration for using placeholders
+ */
 public class PapiIntegration extends PluginIntegration {
     private PapiExpansion extension;
 

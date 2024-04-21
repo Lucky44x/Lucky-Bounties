@@ -3,9 +3,15 @@ package com.github.lucky44x.luckybounties.conditions;
 import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.abstraction.bounties.Bounty;
 import com.github.lucky44x.luckybounties.abstraction.condition.BountyCondition;
+import com.github.lucky44x.luckybounties.abstraction.integration.EconomyHandler;
+import com.github.lucky44x.luckybounties.abstraction.integration.Integration;
+import lombok.Getter;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ConditionManager {
     private final HashMap<String, BountyCondition> conditionMap = new HashMap<>();
@@ -54,5 +60,13 @@ public class ConditionManager {
 
     public void unregisterCondition(BountyCondition condition){
         conditionMap.remove(condition.getClass().getSimpleName());
+    }
+
+    public String getConditionString() {
+        StringBuilder finalOut = new StringBuilder();
+        for(Map.Entry<String, BountyCondition> entry : conditionMap.entrySet()){
+            finalOut.append("        ").append(entry.getKey()).append(" : ").append(entry.getValue().getClass().getSimpleName()).append("\n");
+        }
+        return finalOut.toString();
     }
 }

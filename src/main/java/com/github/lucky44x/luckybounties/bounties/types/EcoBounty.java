@@ -2,7 +2,6 @@ package com.github.lucky44x.luckybounties.bounties.types;
 
 import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.abstraction.bounties.Bounty;
-import com.github.lucky44x.luckybounties.integration.plugins.VaultPluginIntegration;
 import com.github.lucky44x.luckyutil.config.LangConfig;
 import lombok.Getter;
 import org.bukkit.ChatColor;
@@ -48,47 +47,45 @@ public class EcoBounty extends Bounty {
         if(setter == null)
             return;
 
-        if(!instance.getIntegrationManager().isIntegrationActive("VAULT"))
+        if(!instance.getIntegrationManager().isEconomyActive())
             return;
 
-        instance.getIntegrationManager().getIntegration("VAULT", VaultPluginIntegration.class).add(setter, reward);
+        instance.getIntegrationManager().getEconomyHandler().add(setter, reward);
         instance.getHandler().removeBounty(this);
     }
 
     @Override
     public void receiveBounty(Player killer) {
-        if(!instance.getIntegrationManager().isIntegrationActive("VAULT"))
+        if(!instance.getIntegrationManager().isEconomyActive())
             return;
 
-        instance.getIntegrationManager().getIntegration("VAULT", VaultPluginIntegration.class)
-                .add(killer, reward);
+        instance.getIntegrationManager().getEconomyHandler().add(killer, reward);
         instance.getHandler().removeBounty(this);
     }
 
     @Override
     public void giveReward(Player user) {
-        if(!instance.getIntegrationManager().isIntegrationActive("VAULT"))
+        if(!instance.getIntegrationManager().isEconomyActive())
             return;
 
-        instance.getIntegrationManager().getIntegration("VAULT", VaultPluginIntegration.class)
-                .add(user, reward);
+        instance.getIntegrationManager().getEconomyHandler().add(user, reward);
         instance.getHandler().removeBounty(this);
     }
 
     @LangConfig.LangData(langKey = "[BOUNTY]")
     public String getRewardString(){
-        return ChatColor.stripColor(instance.getIntegrationManager().isIntegrationActive("VAULT") ?
+        return ChatColor.stripColor(instance.getIntegrationManager().isEconomyActive() ?
                 instance.getIntegrationManager()
-                        .getIntegration("VAULT", VaultPluginIntegration.class)
+                        .getEconomyHandler()
                         .format(reward)
                 : String.valueOf(reward));
     }
 
     @LangConfig.LangData(langKey = "[BOUNTY_TRANSLATABLE]")
     public String getRewardStringTranslatable(){
-        return ChatColor.stripColor(instance.getIntegrationManager().isIntegrationActive("VAULT") ?
+        return ChatColor.stripColor(instance.getIntegrationManager().isEconomyActive() ?
                 instance.getIntegrationManager()
-                        .getIntegration("VAULT", VaultPluginIntegration.class)
+                        .getEconomyHandler()
                         .format(reward)
                 : String.valueOf(reward));
     }

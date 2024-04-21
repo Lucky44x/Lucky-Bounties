@@ -3,6 +3,10 @@ package com.github.lucky44x.luckybounties.user;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author Lucky44x
+ * The UserStats class for keeping track of user-based statistics
+ */
 @Getter @Setter
 public class UserStats {
     private int bountiesSet = 0;

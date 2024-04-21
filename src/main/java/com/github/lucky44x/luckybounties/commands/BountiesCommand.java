@@ -88,7 +88,7 @@ public class BountiesCommand implements CommandExecutor, TabCompleter {
     }
 
     private void handleSetEcoBounty(String targetName, String amount, Player p){
-        if(!instance.configFile.isVaultIntegration()){
+        if(!instance.getIntegrationManager().isEconomyActive()){
             instance.getChatManager().sendLangMessage("eco-disabled", p);
             return;
         }
