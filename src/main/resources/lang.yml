@@ -36,7 +36,6 @@ reload-complete: "&a&lPlugin has been reloaded"
 
 #==== UTIL
 system-bounty-name: "SYSTEM"
-coins-engine-format: "[VALUE]$"
 
 #==== GUIS
 #== Items

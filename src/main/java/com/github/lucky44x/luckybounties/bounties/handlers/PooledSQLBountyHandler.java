@@ -37,7 +37,7 @@ public class PooledSQLBountyHandler extends BountyHandler {
         sqlUserName = userName;
         sqlPassword = password;
 
-        instance.getLogger().info("[SQL Handler] Opening Hikari-Connection-Pool");
+        instance.getLogger().info("[SQL Handler] Opening Hikari-Connection-Pool for: " + instance.configFile.getSqlSystemName().toLowerCase() + " with driver: " + instance.configFile.getSQLDriverClassName());
         pool.openPool(url, userName, password, instance.configFile.getSQLDriverClassName());
 
         finishInit();
