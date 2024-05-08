@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Lucky44x
+ * Command-Handler for the LuckyBounties command (operator stuff)
+ */
 public class OperatorCommands implements CommandExecutor, TabCompleter {
     private final LuckyBounties instance;
 

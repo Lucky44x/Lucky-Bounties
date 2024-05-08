@@ -1,18 +1,20 @@
 package com.github.lucky44x.luckybounties.config;
 
-import com.github.lucky44x.luckybounties.abstraction.integration.Integration;
 import com.github.lucky44x.luckyutil.config.AutomatedConfig;
+import com.mysql.cj.jdbc.Driver;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
-import org.mariadb.jdbc.Driver;
 
+/**
+ * @author Lucky44x
+ * ConfigFile for the Plugin-Config
+ */
 @Getter
 public class LuckyBountiesConfig extends AutomatedConfig {
 
     private final String[] supportedSQLDrivers = new String[]{
-            "mysql",
-            "mariadb"
+            "mysql"
     };
 
     @ConfigData(tag = "system-uuid")
@@ -175,6 +177,11 @@ public class LuckyBountiesConfig extends AutomatedConfig {
         return superVanishEnabled || premiumVanishEnabled;
     }
 
+    /**
+     * Transforms a config-time (x_d:x_h:x_m:x_s) value to tick time
+     * @param input the input string
+     * @return the time in milliseconds
+     */
     public long toMillisecTime(String input){
         long out = 0;
         String[] parts = input.split(":");
@@ -193,6 +200,11 @@ public class LuckyBountiesConfig extends AutomatedConfig {
         return out;
     }
 
+    /**
+     * Transforms a config-time (x_d:x_h:x_m:x_s) value to tick time
+     * @param input teh input string
+     * @return the time in ticks
+     */
     public long toTickTime(String input){
         long out = 0;
         String[] parts = input.split(":");
@@ -225,8 +237,8 @@ public class LuckyBountiesConfig extends AutomatedConfig {
         if(!isSQLModeValid())
             return null;
 
-        return switch (sqlSystemName.toLowerCase()) {
-            case ("mariadb") -> Driver.class.getName();
+        return switch(sqlSystemName.toLowerCase()){
+            case("mysql") -> "com.mysql.cj.jdbc.Driver";
             default -> null;
         };
     }

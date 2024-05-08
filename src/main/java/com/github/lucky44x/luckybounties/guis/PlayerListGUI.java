@@ -12,6 +12,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.io.FileNotFoundException;
 
+/**
+ * @author Lucky44x
+ * FileGUI for the PlayerList
+ */
 public class PlayerListGUI extends FileGUI {
 
     private final Player[] players;

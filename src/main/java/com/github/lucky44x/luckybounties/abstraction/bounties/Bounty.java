@@ -15,6 +15,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author Lucky44x
+ * Simple Bounty Abstraction
+ */
 public abstract class Bounty {
     @Getter
     protected UUID setterID;
@@ -24,11 +28,14 @@ public abstract class Bounty {
     protected OfflinePlayer setter;
     protected final OfflinePlayer target;
 
-    @Getter@NonNull
+    @Getter
     protected final long setTime;
 
     protected final LuckyBounties instance;
 
+    /**
+     * IGNORE, used by auto-lang-tag-replacement
+     */
     @LangConfig.LangData(langKey = "[SETTER]")
     public String langGetSetterName(){
         if(setter != null)
@@ -37,31 +44,31 @@ public abstract class Bounty {
         return instance.langFile.getText("system-bounty-name");
     }
 
+    /**
+     * IGNORE, used by auto-lang-tag-replacement
+     */
     @LangConfig.LangData(langKey = "[TARGET]")
     public String langGetTargetName(){
         return  target.getName();
     }
 
+    /**
+     * Creates a bounty with the current time as set-time
+     * @param target the target of the bounty
+     * @param setter the setter of the bounty
+     * @param instance the main-plugin instance
+     */
     public Bounty(UUID target, UUID setter, LuckyBounties instance){
-        this.instance = instance;
-        this.setterID = setter;
-        this.targetID = target;
-
-        if(setterID == null)
-            setterID = instance.getServerUUID();
-
-        if(setterID.equals(instance.getServerUUID())){
-            this.setter = null;
-        }
-        else {
-            this.setter = Bukkit.getOfflinePlayer(setterID);
-        }
-
-        this.target = Bukkit.getOfflinePlayer(targetID);
-
-        setTime = System.currentTimeMillis();
+        this(target, setter, System.currentTimeMillis(), instance);
     }
 
+    /**
+     * Creates a bounty with the given time as set-time
+     * @param target the target of the bounty
+     * @param setter the setter of the bounty
+     * @param setTime the time when the bounty was set
+     * @param instance the main-plugin instance
+     */
     public Bounty(UUID target, UUID setter, long setTime, LuckyBounties instance){
         this.instance = instance;
         this.setterID = setter;
@@ -82,8 +89,14 @@ public abstract class Bounty {
         this.setTime = setTime;
     }
 
+    /**
+     * @return teh reward as an ItemStack
+     */
     public abstract ItemStack toItem();
 
+    /**
+     * IGNORE used by automatic tag replacement via LANG-Config (LuckyUtil)
+     */
     @LangConfig.LangData(langKey = "[DATE]")
     public String langGetSetDate(){
         Date dateTime = new Date(setTime);
@@ -92,12 +105,26 @@ public abstract class Bounty {
         return df.format(dateTime);
     }
 
+    /**
+     * Returns the bounty to a player (depending on implementation)
+     */
     public abstract void returnBounty();
 
+    /**
+     * Makes the killer receive the bounty-reward
+     * @param killer the killer
+     */
     public abstract void receiveBounty(Player killer);
 
+    /**
+     * gives the bounty-reward to the given player
+     * @param user the player who gets the reward
+     */
     public abstract void giveReward(Player user);
 
+    /**
+     * @return the setter's UUID in string format
+     */
     public String getSetterStringID() {
         if(setterID == null)
             return instance.getServerUUID().toString();

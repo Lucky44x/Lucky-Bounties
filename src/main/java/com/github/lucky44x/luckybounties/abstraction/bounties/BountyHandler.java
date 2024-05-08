@@ -10,6 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * @author Lucky44x
+ * abstracted version of BountyHandler logic, for making it possible to have different systems
+ * (like SQL vs Local file) and so on
+ */
 public abstract class BountyHandler {
     protected final LuckyBounties instance;
     protected final HashMap<String, BountyCondition> conditionMap = new HashMap<>();
@@ -22,14 +27,39 @@ public abstract class BountyHandler {
         this.onLoad();
     }
 
+    /**
+     * @param target the target Player-UUID
+     * @return an array of bounties with the given player as target
+     */
     public abstract Bounty[] getBountiesByTarget(UUID target);
+
+    /**
+     * @param setter the setter Player-UUID
+     * @return an array of bounties with the given player as setter
+     */
     public abstract Bounty[] getBountiesBySetter(UUID setter);
+
+    /**
+     * @param player the target Player
+     * @return an array of bounties with the given player as target
+     */
     public final Bounty[] getBountiesByTarget(Player player){
         return getBountiesByTarget(player.getUniqueId());
     }
+
+    /**
+     * @param setter the setter Player
+     * @return an array of bounties with the given player as setter
+     */
     public final Bounty[] getBountiesBySetter(Player setter){
         return getBountiesBySetter(setter.getUniqueId());
     }
+
+    /*
+    Soooo, you've come this far... sorry to disappoint you, but I do not have the time or the patience to document all this shit... most of the function names are self-explanatory, so yeah
+    TODO: Document this stuff
+     */
+
     public abstract double getEcoAmount(UUID target);
     public abstract UUID[] getAllTargets();
     public abstract UUID[] getAllUsers();

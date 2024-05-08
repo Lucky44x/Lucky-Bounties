@@ -5,6 +5,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+/**
+ * @author Lucky44x
+ * Simple Join-Event Handler
+ */
 public class JoinEvent implements Listener {
 
     private final LuckyBounties instance;

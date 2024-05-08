@@ -21,6 +21,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Lucky44x
+ * FileGUI for the BountiesList
+ */
 public class BountiesListGUI extends FileGUI {
     @LangConfig.LangData(langKey="[TARGET]", stringMethodNames="getName")
     private final Player target;

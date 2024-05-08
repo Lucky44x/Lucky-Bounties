@@ -4,6 +4,10 @@ import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.abstraction.bounties.Bounty;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ * BountyMessage-handler
+ */
 public abstract class BountyMessages {
     protected final LuckyBounties instance;
 

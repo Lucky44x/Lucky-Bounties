@@ -14,6 +14,10 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 import java.util.List;
 
+/**
+ * @author Lucky44x
+ * Simple ChatManager for handling the more complicated chat stuff, like LANG and Hover stuff
+ */
 public class ChatManager {
     private final LuckyBounties instance;
     private final com.github.lucky44x.luckyutil.chat.ChatManager chatUtils;
@@ -34,6 +38,10 @@ public class ChatManager {
     }
 
     //region setMessage
+    /**
+     * Sends a set-message to all players if global set message is active and to only the setter if not
+     * @param b the bounty to be set
+     */
     public void sendSetMessage(Bounty b){
         boolean isGlobal = instance.configFile.isGlobalSetMessage();
         recentSetBounty = b;
@@ -78,6 +86,13 @@ public class ChatManager {
     //endregion setMessage
 
     //region takeMessage
+
+    /**
+     * Sends a take-message to all players if global-take message is active and to only the killer if not
+     * @param killer the killer of the event
+     * @param target the target of the event
+     * @param bounties the bounties of the target
+     */
     public void sendTakeMessage(Player killer, Player target, Bounty[] bounties){
         boolean isGlobal = instance.configFile.isGlobalTakeMessage();
         recentTakeBounties = bounties;
@@ -130,6 +145,12 @@ public class ChatManager {
             String killerName){}
     //endregion
 
+    /**
+     * sends a message from the lang file, identified by the given key
+     * @param key the key of the message in the lang file
+     * @param target the player who gets the message
+     * @param callers all objects which should be used for auto-replacing tags in the message (used via LuckyUtil)
+     */
     public void sendLangMessage(String key, Player target, Object... callers){
         target.spigot().sendMessage(instance.langFile.getPostProcessedText(key, callers));
     }

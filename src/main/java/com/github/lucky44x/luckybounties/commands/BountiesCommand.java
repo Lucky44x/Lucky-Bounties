@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Lucky44x
+ * Command-Handler for the Bounties Command
+ */
 public class BountiesCommand implements CommandExecutor, TabCompleter {
     private final LuckyBounties instance;
 

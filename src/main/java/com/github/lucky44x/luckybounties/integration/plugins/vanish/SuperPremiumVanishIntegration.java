@@ -8,6 +8,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 
+/**
+ * @author Lucky44x
+ * Vanish Integration for supervanish and premiumvanish
+ */
 public class SuperPremiumVanishIntegration extends VanishIntegration {
     public SuperPremiumVanishIntegration(LuckyBounties instance) {
         super(instance);

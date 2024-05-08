@@ -8,6 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Lucky44x
+ * ConfigFile for the FilterConfig
+ */
 public class FilterListConfig extends ConfigFile {
     private final String listName;
 

@@ -5,6 +5,10 @@ import com.github.lucky44x.luckybounties.abstraction.bounties.Bounty;
 import com.github.lucky44x.luckybounties.abstraction.condition.BountyCondition;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ * simple implementation of a permission based BountyCondition, in order to block certain actions, or allow them
+ */
 public class PermissionsCondition implements BountyCondition {
 
     private final LuckyBounties instance;

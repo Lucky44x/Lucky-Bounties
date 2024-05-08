@@ -6,6 +6,10 @@ import com.github.lucky44x.luckybounties.abstraction.integration.ConditionIntegr
 import org.bukkit.entity.Player;
 import org.bukkit.metadata.MetadataValue;
 
+/**
+ * @author Lucky44x
+ * Vanish Integration for handling visibillity based on spigot's visibillity system
+ */
 public class VanishIntegration extends ConditionIntegration {
 
     public VanishIntegration(LuckyBounties instance) { super(instance); }

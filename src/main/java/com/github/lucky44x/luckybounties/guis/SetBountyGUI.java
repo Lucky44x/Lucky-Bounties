@@ -7,6 +7,10 @@ import org.bukkit.entity.Player;
 
 import java.io.FileNotFoundException;
 
+/**
+ * @author Lucky44x
+ * File GUI for the setBounty GUI
+ */
 public class SetBountyGUI extends FileGUI {
 
     private boolean setBountyConfirmed = false;

@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author Lucky44x
+ * FileGUI for the Returnbuffer
+ */
 public class ReturnBufferGUI extends FileGUI {
     @LangConfig.LangData(langKey="[TARGET]", stringMethodNames="getName")
     private final OfflinePlayer target;

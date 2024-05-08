@@ -4,6 +4,10 @@ import com.github.lucky44x.luckybounties.LuckyBounties;
 import com.github.lucky44x.luckybounties.abstraction.integration.exception.IntegrationException;
 import org.bukkit.Bukkit;
 
+/**
+ * @author Lucky44x
+ * Integration extension, specifically designed to work with another plugin
+ */
 public class PluginIntegration extends Integration{
 
     private final String pluginName;

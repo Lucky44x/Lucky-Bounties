@@ -12,6 +12,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.FileNotFoundException;
 
+/**
+ * @author Lucky44x
+ * AnvilGUI for the setEcoBounty GUI
+ */
 public class SetEcoBountyGUI extends AnvilGUI {
 
     @LangConfig.LangData(langKey = "[TARGET]", stringMethodNames = "getName")
@@ -42,6 +46,9 @@ public class SetEcoBountyGUI extends AnvilGUI {
     public void slotClickedEvent(InventoryClickEvent e){
         //instance.getLogger().info("Slot: " + e.getSlot());
         if(e.getSlot() == 2){
+
+            if(getItem(2) == null)
+                return;
 
             if(!NumberUtilities.isStringValidFloat(getItem(2).getItemMeta().getDisplayName())){
                 langInputStringTMP = getItem(2).getItemMeta().getDisplayName();

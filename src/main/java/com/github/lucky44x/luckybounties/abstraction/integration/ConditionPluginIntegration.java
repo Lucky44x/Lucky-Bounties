@@ -6,6 +6,9 @@ import com.github.lucky44x.luckybounties.abstraction.condition.BountyCondition;
 import com.github.lucky44x.luckybounties.abstraction.integration.exception.IntegrationException;
 import org.bukkit.entity.Player;
 
+/**
+ * @author Lucky44x
+ */
 public abstract class ConditionPluginIntegration extends PluginIntegration implements BountyCondition {
     public ConditionPluginIntegration(LuckyBounties instance, String pluginName) { super(instance, pluginName); }
     public boolean isAllowedToSet(Bounty b, Player target, Player setter) { return true; }
