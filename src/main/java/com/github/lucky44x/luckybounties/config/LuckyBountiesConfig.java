@@ -8,12 +8,12 @@ import org.bukkit.plugin.Plugin;
 
 /**
  * @author Lucky44x
- * ConfigFile for the Plugin-Config
+ *         ConfigFile for the Plugin-Config
  */
 @Getter
 public class LuckyBountiesConfig extends AutomatedConfig {
 
-    private final String[] supportedSQLDrivers = new String[]{
+    private final String[] supportedSQLDrivers = new String[] {
             "mysql"
     };
 
@@ -26,111 +26,115 @@ public class LuckyBountiesConfig extends AutomatedConfig {
     @ConfigData(tag = "self-bounty-allowed")
     private boolean selfBountyAllowed = false;
 
-    //region message settings
-    @ConfigData(tag="bounty-set-global")
+    // region message settings
+    @ConfigData(tag = "bounty-set-global")
     private boolean globalSetMessage = false;
 
-    @ConfigData(tag="bounty-take-global")
+    @ConfigData(tag = "bounty-take-global")
     private boolean globalTakeMessage = false;
-    //endregion
+    // endregion
 
-    //region generalSettings
-    @ConfigData(tag="time-format")
+    // region generalSettings
+    @ConfigData(tag = "time-format")
     private String timeFormat = "yyyy-MM-dd HH:mm:ss";
-    @ConfigData(tag="return-removed-bounties")
+    @ConfigData(tag = "return-removed-bounties")
     private boolean returnRemovedBounties = false;
-    @ConfigData(tag="setters-can-remove-bounties")
+    @ConfigData(tag = "setters-can-remove-bounties")
     private boolean settersAllowedToRemove = false;
-    @ConfigData(tag="expire.enabled")
+    @ConfigData(tag = "expire.enabled")
     private boolean bountiesExpire = false;
-    //endregion
+    // endregion
 
-    //region GUIs
-    @ConfigData(tag="eco-bounties-combined")
+    // region GUIs
+    @ConfigData(tag = "eco-bounties-combined")
     private boolean ecoBountiesMerged = false;
-    //endregion
+    // endregion
 
-    //region integration settings
-    @ConfigData(tag="items-allowed")
+    // region integration settings
+    @ConfigData(tag = "items-allowed")
     private boolean itemsEnabled = false;
 
-    @ConfigData(tag="vault.enabled")
+    @ConfigData(tag = "vault.enabled")
     private boolean vaultIntegration = false;
 
-    @ConfigData(tag="coins-engine.enabled")
+    @ConfigData(tag = "coins-engine.enabled")
     private boolean coinsEngineIntegration = false;
 
-    @ConfigData(tag="papi.enabled")
+    @ConfigData(tag = "papi.enabled")
     private boolean papiIntegration = false;
 
-    @ConfigData(tag="cooldown.enabled")
+    @ConfigData(tag = "cooldown.enabled")
     private boolean cooldownEnabled = false;
 
-    //region vanish settings
-    @ConfigData(tag="vanish.enabled")
+    // region vanish settings
+    @ConfigData(tag = "vanish.enabled")
     private boolean vanishEnabled = false;
-    @ConfigData(tag="vanish.general-settings.hide-from-everyone")
+    @ConfigData(tag = "vanish.general-settings.hide-from-everyone")
     private boolean vanishTotalHide = false;
-    @ConfigData(tag="vanish.general-settings.do-metadata-check")
+    @ConfigData(tag = "vanish.general-settings.do-metadata-check")
     private boolean vanishMetadataCheck = false;
-    @ConfigData(tag = "vanish.integrations.SuperVanish") @Getter(AccessLevel.NONE)
+    @ConfigData(tag = "vanish.integrations.SuperVanish")
+    @Getter(AccessLevel.NONE)
     private boolean superVanishEnabled = false;
-    @ConfigData(tag = "vanish.integrations.PremiumVanish") @Getter(AccessLevel.NONE)
+    @ConfigData(tag = "vanish.integrations.PremiumVanish")
+    @Getter(AccessLevel.NONE)
     private boolean premiumVanishEnabled = false;
-    //endregion
+    // endregion
 
-    //region Eco settings
-    @ConfigData(tag="economy.default-bounty")
+    // region Eco settings
+    @ConfigData(tag = "economy.default-bounty")
     private double defaultEcoBounty = 0;
 
-    @ConfigData(tag="economy.minimum-bounty")
+    @ConfigData(tag = "economy.minimum-bounty")
     private double minimumEcoBounty = 0;
 
-    @ConfigData(tag="economy.maximum-bounty")
+    @ConfigData(tag = "economy.maximum-bounty")
     private double maximumEcoBounty = 0;
 
-    @ConfigData(tag="economy.eco-item")
+    @ConfigData(tag = "economy.eco-item")
     private String ecoItem = "GOLD_NUGGET";
-    //endregion
+    // endregion
 
-    //region CoinsEngine settings
-    @ConfigData(tag="coins-engine.economy-name")
+    // region CoinsEngine settings
+    @ConfigData(tag = "coins-engine.economy-name")
     private String economyName;
 
-    //region WorldGuard
-    @ConfigData(tag="worldguard.enabled")
+    // region WorldGuard
+    @ConfigData(tag = "worldguard.enabled")
     private boolean worldGuardEnabled;
-    @ConfigData(tag="worldguard.invis-region-op-bypass")
+    @ConfigData(tag = "worldguard.invis-region-op-bypass")
     private boolean opOverrideWGInvis;
 
-    //region expiring bounties
-    @ConfigData(tag="expire.return-expired-bounties")
+    // region expiring bounties
+    @ConfigData(tag = "expire.return-expired-bounties")
     private boolean expiredBountiesReturn;
     @ConfigData(tag = "expire.bounty-lifetime")
     private String bountyLifetime;
     @ConfigData(tag = "expire.periodical-check.enabled")
     private boolean expiredBountiesCheck;
-    @ConfigData(tag="expire.periodical-check.period")
+    @ConfigData(tag = "exploitprevention.enabled")
+    private boolean exploitPrevEnabled;
+    @ConfigData(tag = "expire.periodical-check.period")
     private String expiredCheckPeriod;
-    //endregion
+    // endregion
 
-    //region lists
-    @ConfigData(tag="filters.whitelist")
+    // region lists
+    @ConfigData(tag = "filters.whitelist")
     private boolean whitelistActive = false;
-    @ConfigData(tag="filters.blacklist")
+    @ConfigData(tag = "filters.blacklist")
     private boolean blacklistActive = false;
-    //endregion
+    // endregion
 
-    //region cooldown
-    @ConfigData(tag="cooldown.mode")
+    // region cooldown
+    @ConfigData(tag = "cooldown.mode")
     private int cooldownMode = 0;
 
-    @ConfigData(tag="cooldown.time")
+    @ConfigData(tag = "cooldown.time")
     private String cooldownTime = "";
-    //endregion
-    //endregion
+    // endregion
+    // endregion
 
-    //region towny
+    // region towny
     @ConfigData(tag = "towny.enabled")
     private boolean townyEnabled = false;
     @ConfigData(tag = "towny.ally-kill-ignored")
@@ -145,33 +149,33 @@ public class LuckyBountiesConfig extends AutomatedConfig {
     private boolean townySameTownSetAllowed = false;
     @ConfigData(tag = "towny.friends-set-allowed")
     private boolean townyFriendsSetAllowed = false;
-    //endregion
+    // endregion
 
-    //region SQL
+    // region SQL
     @ConfigData(tag = "sql.system")
     private String sqlSystemName;
-    @ConfigData(tag="sql.host")
+    @ConfigData(tag = "sql.host")
     private String sqlHostName;
-    @ConfigData(tag="sql.port")
+    @ConfigData(tag = "sql.port")
     private int sqlPort;
-    @ConfigData(tag="sql.database")
+    @ConfigData(tag = "sql.database")
     private String sqlDBName;
-    @ConfigData(tag="sql.username")
+    @ConfigData(tag = "sql.username")
     private String sqlUserName;
-    @ConfigData(tag="sql.password")
+    @ConfigData(tag = "sql.password")
     private String sqlPassword;
-    @ConfigData(tag="sql.enabled")
+    @ConfigData(tag = "sql.enabled")
     private boolean sqlEnabled;
-    //endregion
+    // endregion
 
-    //endregion
+    // endregion
 
     public LuckyBountiesConfig(Plugin instance) {
         super(instance, "config");
     }
 
-    public boolean isSuperVanishEnabled(){
-        if(!vanishEnabled)
+    public boolean isSuperVanishEnabled() {
+        if (!vanishEnabled)
             return false;
 
         return superVanishEnabled || premiumVanishEnabled;
@@ -179,13 +183,14 @@ public class LuckyBountiesConfig extends AutomatedConfig {
 
     /**
      * Transforms a config-time (x_d:x_h:x_m:x_s) value to tick time
+     * 
      * @param input the input string
      * @return the time in milliseconds
      */
-    public long toMillisecTime(String input){
+    public long toMillisecTime(String input) {
         long out = 0;
         String[] parts = input.split(":");
-        for(String time : parts){
+        for (String time : parts) {
             String[] units = time.split("_");
             long base = Long.parseLong(units[0]);
             long multiplier = switch (units[1]) {
@@ -202,13 +207,14 @@ public class LuckyBountiesConfig extends AutomatedConfig {
 
     /**
      * Transforms a config-time (x_d:x_h:x_m:x_s) value to tick time
+     * 
      * @param input teh input string
      * @return the time in ticks
      */
-    public long toTickTime(String input){
+    public long toTickTime(String input) {
         long out = 0;
         String[] parts = input.split(":");
-        for(String time : parts){
+        for (String time : parts) {
             String[] units = time.split("_");
             long base = Long.parseLong(units[0]);
             long multiplier = switch (units[1]) {
@@ -224,21 +230,22 @@ public class LuckyBountiesConfig extends AutomatedConfig {
     }
 
     public boolean isSQLModeValid() {
-        for(String s : supportedSQLDrivers){
-            if(sqlSystemName.toLowerCase().equals(s))
+        for (String s : supportedSQLDrivers) {
+            if (sqlSystemName.toLowerCase().equals(s))
                 return true;
         }
 
-        instance.getLogger().warning(sqlSystemName + " is not a supported sql driver in this plugin, if you want it to be, you can request it in discord (https://discord.gg/Cc6AfggkMM)");
+        instance.getLogger().warning(sqlSystemName
+                + " is not a supported sql driver in this plugin, if you want it to be, you can request it in discord (https://discord.gg/Cc6AfggkMM)");
         return false;
     }
 
-    public String getSQLDriverClassName(){
-        if(!isSQLModeValid())
+    public String getSQLDriverClassName() {
+        if (!isSQLModeValid())
             return null;
 
-        return switch(sqlSystemName.toLowerCase()){
-            case("mysql") -> "com.mysql.cj.jdbc.Driver";
+        return switch (sqlSystemName.toLowerCase()) {
+            case ("mysql") -> "com.mysql.cj.jdbc.Driver";
             default -> null;
         };
     }

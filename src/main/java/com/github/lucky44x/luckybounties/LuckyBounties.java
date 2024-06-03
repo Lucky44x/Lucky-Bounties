@@ -24,6 +24,7 @@ import com.github.lucky44x.luckybounties.integration.IntegrationManager;
 import com.github.lucky44x.luckybounties.integration.extensions.BlacklistExtension;
 import com.github.lucky44x.luckybounties.integration.extensions.CooldownExtension;
 import com.github.lucky44x.luckybounties.integration.extensions.ExpiredBountiesChecker;
+import com.github.lucky44x.luckybounties.integration.extensions.ExploitPreventionExtension;
 import com.github.lucky44x.luckybounties.integration.extensions.WhitelistExtension;
 import com.github.lucky44x.luckybounties.integration.plugins.PapiIntegration;
 import com.github.lucky44x.luckybounties.integration.plugins.TownyIntegration;
@@ -247,6 +248,11 @@ public final class LuckyBounties extends JavaPlugin {
         //Check expired-bounties-checker extension
         integrationManager.registerOrUnregisterIntegration(
                 "EBCex", configFile.isExpiredBountiesCheck(), ExpiredBountiesChecker.class, time, suppressMessage
+        );
+
+        //Check exploit-prevention extension
+        integrationManager.registerOrUnregisterIntegration(
+                "EPex", configFile.isExploitPrevEnabled(), ExploitPreventionExtension.class, time, suppressMessage
         );
 
         //Check Whitelist
