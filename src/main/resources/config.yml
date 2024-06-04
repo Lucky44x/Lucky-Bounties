@@ -44,7 +44,7 @@ filters:
 vanish:
   enabled: true
   general-settings:
-    hide-from-everyone: true      #Even if players can see you while you are in vanish, they will not be able to see you in the GUI
+    hide-from-everyone: true #Even if players can see you while you are in vanish, they will not be able to see you in the GUI
     do-metadata-check: true
   integrations:
     SuperVanish: false
@@ -58,8 +58,8 @@ papi:
 economy:
   eco-item: GOLD_NUGGET
   default-bounty: 100
-  minimum-bounty: 1             #Inclusive (bounty >= min-bounty)
-  maximum-bounty: 100           #Inclusive (bounty <= min-bounty)
+  minimum-bounty: 1 #Inclusive (bounty >= min-bounty)
+  maximum-bounty: 100 #Inclusive (bounty <= min-bounty)
 
 #= CoinsEngine
 coins-engine:
@@ -83,6 +83,10 @@ expire:
   periodical-check:
     enabled: false
     period: 10_m
+
+#= Exploit Prevention
+exploitprevention:
+  enabled: false
 
 #= Cool down
 #Possible mode values ( 0 = Per target cooldown (all players have the same cooldown on one target), 1 = Per setter (each player has an individual cooldown on the same target))
