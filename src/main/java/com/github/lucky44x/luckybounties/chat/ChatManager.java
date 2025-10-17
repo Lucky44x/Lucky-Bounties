@@ -43,6 +43,10 @@ public class ChatManager {
      * @param b the bounty to be set
      */
     public void sendSetMessage(Bounty b){
+
+        //If config says don't send, just don't do it
+        if(!instance.configFile.isSendSetMessage()) return;
+
         boolean isGlobal = instance.configFile.isGlobalSetMessage();
         recentSetBounty = b;
         if(isGlobal)
@@ -94,6 +98,10 @@ public class ChatManager {
      * @param bounties the bounties of the target
      */
     public void sendTakeMessage(Player killer, Player target, Bounty[] bounties){
+
+        //If config says don't send, just don't do it
+        if(!instance.configFile.isSendSetMessage()) return;
+
         boolean isGlobal = instance.configFile.isGlobalTakeMessage();
         recentTakeBounties = bounties;
         if(isGlobal)

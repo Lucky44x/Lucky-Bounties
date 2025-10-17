@@ -12,4 +12,5 @@ public interface EconomyHandler {
     void add(OfflinePlayer target, double value);
     void withdraw(OfflinePlayer target, double value);
     double getBalance(OfflinePlayer target);
+    boolean hasAccount(OfflinePlayer target);
 }

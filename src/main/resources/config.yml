@@ -30,6 +30,8 @@ sql:
   password: root
 
 #=== Messages
+send-set-message: true
+send-take-message: true
 bounty-set-global: false
 bounty-take-global: false
 

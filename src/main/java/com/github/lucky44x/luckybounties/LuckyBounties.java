@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-//TODO: priority 0 update the GUI stuff (especially the AnvilGUI) to the newest mc version (makes no sense to put this here, since that has to be done in the LuckyGUI project, but I'll forget otherwise)
 //TODO: priority 1, add more documentation
 //TODO: priority 1 Rewrite the expired bounties system
 

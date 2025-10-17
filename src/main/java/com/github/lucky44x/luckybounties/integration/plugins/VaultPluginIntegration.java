@@ -74,6 +74,15 @@ public class VaultPluginIntegration extends ConditionPluginIntegration implement
     }
     //endregion
 
+    /**
+     * @param target the target Player
+     * @return true if the player has an account
+     */
+    @Override
+    public boolean hasAccount(OfflinePlayer target) {
+        return economy.hasAccount(target);
+    }
+
     @Override
     public boolean isAllowedToSet(Bounty b, Player target, Player setter) {
         if(!(b instanceof EcoBounty))

@@ -116,6 +116,20 @@ public class CoinsEngineIntegration extends ConditionPluginIntegration implement
         return CoinsEngineAPI.getBalance(target.getPlayer(), currency);
     }
 
+    /**
+     * @param target the target Player
+     * @return true if the player has an account
+     */
+    @Override
+    public boolean hasAccount(OfflinePlayer target) {
+        /*
+        return CoinsEngineAPI.getUserData(target.getPlayer()) != null;
+        Since This function is annotated as NotNull we can assume every player in a coinsengine enviornment has an account,
+        so we can skip this step and just return true
+         */
+        return true;
+    }
+
     @Override
     public boolean isAllowedToSet(Bounty b, Player target, Player setter){
         if(!(b instanceof EcoBounty))

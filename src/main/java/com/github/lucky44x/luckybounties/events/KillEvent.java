@@ -34,8 +34,12 @@ public class KillEvent implements Listener {
             return;
 
         Bounty[] bounties = instance.getHandler().getBountiesByTarget(e.getEntity());
+        /* Absolutely crazy that no one in almost 2 years except for mloody_gd complained about this shit...
+        Mind-boggling even */
+        if (bounties.length == 0)
+            return;
 
-        //Call server-event for boutny collection (api 'n stuff)
+        //Call server-event for bounty collection (api 'n stuff)
         BountyCollectEvent event = new BountyCollectEvent(e.getEntity().getKiller(), e.getEntity(), bounties);
         instance.getBridge().callEvent(event);
         //Cancel all of this if the event is cancelled

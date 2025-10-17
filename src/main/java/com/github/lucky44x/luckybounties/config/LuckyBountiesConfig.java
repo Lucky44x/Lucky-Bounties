@@ -27,6 +27,12 @@ public class LuckyBountiesConfig extends AutomatedConfig {
     private boolean selfBountyAllowed = false;
 
     // region message settings
+    @ConfigData(tag = "send-set-message")
+    private boolean sendSetMessage = false;
+
+    @ConfigData(tag = "send-take-message")
+    private boolean sendTakeMessage = false;
+
     @ConfigData(tag = "bounty-set-global")
     private boolean globalSetMessage = false;
 
